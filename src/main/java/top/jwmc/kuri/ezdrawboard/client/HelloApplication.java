@@ -1,4 +1,4 @@
-package top.jwmc.kuri.ezdrawboard;
+package top.jwmc.kuri.ezdrawboard.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

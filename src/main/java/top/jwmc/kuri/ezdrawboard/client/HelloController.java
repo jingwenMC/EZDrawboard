@@ -1,4 +1,4 @@
-package top.jwmc.kuri.ezdrawboard;
+package top.jwmc.kuri.ezdrawboard.client;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
