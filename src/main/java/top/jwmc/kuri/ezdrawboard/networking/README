@@ -1,0 +1,18 @@
+EZDTP 协议规范
+TCP based
+第一个字符串规定了模式
+[str:Auth]
+REQ long:uid
+RSP str:password_hash
+REQ str:password_salted_sha256
+RSP int:status(0:ok|1:pw_error)
+status=0?RSP str:access_token
+EOT
+
+[str:Token]
+REQ str:access_token|int:mode(0:query|1:update_timeout)
+RSP int:status(0:ok|1:error)
+status=0?RSP long:uid|long:timeout
+EOT
+
+[Request]
