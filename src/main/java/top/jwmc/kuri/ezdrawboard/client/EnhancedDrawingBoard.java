@@ -1,252 +1,4 @@
-package top.jwmc.kuri.ezdrawboard.client;/*import javafx.application.Application;
-import javafx.geometry.Point2D;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class EnhancedDrawingBoard extends Application {
-    private enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER ,}
-    private double eraserWidth = 20;
-    private double eraserHeight = 20;
-    private Canvas canvas;
-    private GraphicsContext gc;
-    private Color currentColor = Color.BLACK;
-    private Color backgroundColor = Color.WHITE;
-    private ToolType currentTool = ToolType.LINE;
-    private double startX, startY;
-    private List<Point2D> currentPath = new ArrayList<>();
-    private List<Drawing> drawings = new ArrayList<>();
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        ColorPicker colorPicker = new ColorPicker(currentColor);
-        ToggleGroup toolGroup = new ToggleGroup();
-
-        RadioButton lineButton = createToolButton("线条", ToolType.LINE, toolGroup);
-        RadioButton rectButton = createToolButton("矩形", ToolType.RECTANGLE, toolGroup);
-        RadioButton ellipseButton = createToolButton("椭圆", ToolType.ELLIPSE, toolGroup);
-        RadioButton freehandButton = createToolButton("自由绘制", ToolType.FREEHAND, toolGroup);
-        RadioButton eraserButton = createToolButton("橡皮擦", ToolType.ERASER, toolGroup);
-        lineButton.setSelected(true);
-        Button clearButton = new Button("清除");
-        Button talkButton = new Button("聊天");
-        clearButton.setOnAction(e -> {
-            drawings.clear();
-            clearCanvas();
-        });
-
-        HBox toolbar = new HBox(10, colorPicker, lineButton, rectButton, ellipseButton, freehandButton, eraserButton, clearButton,talkButton);
-        toolbar.setStyle("-fx-padding: 10; -fx-background-color: #f0f0f0;");
-
-        canvas = new Canvas(800, 550);
-        gc = canvas.getGraphicsContext2D();
-        initCanvas();
-
-        colorPicker.setOnAction(e -> currentColor = colorPicker.getValue());
-
-        canvas.setOnMousePressed(this::handleMousePressed);
-        canvas.setOnMouseDragged(this::handleMouseDragged);
-        canvas.setOnMouseReleased(this::handleMouseReleased);
-
-        BorderPane root = new BorderPane();
-        root.setTop(toolbar);
-        root.setCenter(canvas);
-
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setTitle("增强版画板");
-        primaryStage.show();
-    }
-
-    private void initCanvas() {
-        gc.setLineWidth(1);
-        clearCanvas();
-    }
-
-    private RadioButton createToolButton(String text, ToolType type, ToggleGroup group) {
-        RadioButton button = new RadioButton(text);
-        button.setToggleGroup(group);
-        button.setOnAction(e -> currentTool = type);
-        return button;
-    }
-
-    private void handleMousePressed(MouseEvent event) {
-        startX = event.getX();
-        startY = event.getY();
-        currentPath.clear();
-        currentPath.add(new Point2D(startX, startY));
-    }
-
-    private void handleMouseDragged(MouseEvent event) {
-        double endX = event.getX();
-        double endY = event.getY();
-
-        if (currentTool == ToolType.ERASER) {
-            currentPath.add(new Point2D(endX, endY));
-            redrawAll();
-
-            // 用背景色绘制橡皮擦路径临时线条
-            gc.setStroke(backgroundColor);
-            gc.setLineWidth(eraserWidth);  // 使用橡皮擦宽度作为线宽
-            drawFreehandPath(currentPath);
-            return;
-        }
-
-        if (currentTool == ToolType.FREEHAND) {
-            currentPath.add(new Point2D(endX, endY));
-            redrawAll();
-            gc.setStroke(currentColor);
-            gc.setLineWidth(1);
-            drawFreehandPath(currentPath);
-        } else {
-            drawTempShape(endX, endY);
-        }
-    }
-
-
-
-
-    private void handleMouseReleased(MouseEvent event) {
-        double endX = event.getX();
-        double endY = event.getY();
-
-        if (currentTool == ToolType.ERASER) {
-            drawings.add(new Drawing(currentTool, backgroundColor, new ArrayList<>(currentPath)));
-            currentPath.clear();
-            redrawAll();
-            return;
-        }
-
-        if (currentTool == ToolType.FREEHAND) {
-            drawings.add(new Drawing(currentTool, currentColor, new ArrayList<>(currentPath)));
-        } else {
-            drawings.add(new Drawing(currentTool, currentColor, startX, startY, endX, endY));
-        }
-        currentPath.clear();
-        redrawAll();
-    }
-
-
-    private void drawFreehandPath(List<Point2D> path) {
-        if (path == null || path.size() < 2) return;
-
-        gc.beginPath();
-        Point2D prev = path.get(0);
-        gc.moveTo(prev.getX(), prev.getY());
-
-        for (int i = 1; i < path.size(); i++) {
-            Point2D point = path.get(i);
-            gc.lineTo(point.getX(), point.getY());
-        }
-        gc.stroke();
-        gc.closePath();
-    }
-
-
-    private void drawTempShape(double endX, double endY) {
-        clearCanvas();
-        redrawAll();
-        gc.setStroke(currentColor);
-        gc.setLineWidth(1);
-
-        switch (currentTool) {
-            case LINE:
-                gc.strokeLine(startX, startY, endX, endY);
-                break;
-            case RECTANGLE:
-                drawRectangle(startX, startY, endX, endY);
-                break;
-            case ELLIPSE:
-                drawEllipse(startX, startY, endX, endY);
-                break;
-        }
-    }
-
-    private void redrawAll() {
-        clearCanvas();
-        for (Drawing drawing : drawings) {
-            gc.setStroke(drawing.color);
-            if (drawing.type == ToolType.FREEHAND || drawing.type == ToolType.ERASER) {
-                gc.setLineWidth(drawing.type == ToolType.ERASER ? eraserWidth : 1);
-                drawFreehandPath(drawing.path);
-            } else {
-                gc.setLineWidth(1);
-                switch (drawing.type) {
-                    case LINE:
-                        gc.strokeLine(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-                        break;
-                    case RECTANGLE:
-                        drawRectangle(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-                        break;
-                    case ELLIPSE:
-                        drawEllipse(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-                        break;
-                }
-            }
-        }
-    }
-
-
-    private void clearCanvas() {
-        gc.setFill(backgroundColor);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-    }
-
-    private void drawRectangle(double x1, double y1, double x2, double y2) {
-        double x = Math.min(x1, x2);
-        double y = Math.min(y1, y2);
-        double width = Math.abs(x2 - x1);
-        double height = Math.abs(y2 - y1);
-        gc.strokeRect(x, y, width, height);
-    }
-
-    private void drawEllipse(double x1, double y1, double x2, double y2) {
-        double x = Math.min(x1, x2);
-        double y = Math.min(y1, y2);
-        double w = Math.abs(x2 - x1);
-        double h = Math.abs(y2 - y1);
-        gc.strokeOval(x, y, w, h);
-    }
-
-    class Drawing {
-        ToolType type;
-        Color color;
-        List<Point2D> path;
-        double x1, y1, x2, y2;
-
-        // 形状构造器
-        Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2) {
-            this.type = type;
-            this.color = color;
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.path = null;
-        }
-
-        // 路径构造器（自由绘制和橡皮擦）
-        Drawing(ToolType type, Color color, List<Point2D> path) {
-            this.type = type;
-            this.color = color;
-            this.path = path;
-        }
-    }
-
-}"""*/
-
+package top.jwmc.kuri.ezdrawboard.client;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -257,9 +9,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.PixelReader;
+import javafx.stage.FileChooser;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.awt.image.BufferedImage;
 
 public class EnhancedDrawingBoard extends Application {
     public enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER }
@@ -292,6 +53,9 @@ public class EnhancedDrawingBoard extends Application {
     private Painter painter;
     private MouseHandler mouseHandler;
 
+    // 新增成员变量：背景图像
+    private Image backgroundImage = null;
+
     @Override
     public void start(Stage primaryStage) {
         canvas = new Canvas(800, 550);
@@ -311,11 +75,18 @@ public class EnhancedDrawingBoard extends Application {
 
         Button clearButton = new Button("清除");
         clearButton.setOnAction(e -> {
-            drawings.clear();
-            painter.clearCanvas();
+            drawings.clear(); // 清空所有绘制的图形
+            painter.clearBackgroundImage(); // 移除背景并恢复白色画布
         });
 
-        HBox toolbar = new HBox(10, colorPicker, line, rect, ellipse, freehand, eraser, clearButton);
+        // 新增保存和读取PNG按钮
+        Button saveButton = new Button("保存背景PNG");
+        Button loadButton = new Button("读取PNG背景");
+
+        saveButton.setOnAction(e -> saveCanvasToPNG(primaryStage));
+        loadButton.setOnAction(e -> loadBackgroundFromPNG(primaryStage));
+
+        HBox toolbar = new HBox(10, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton);
         BorderPane root = new BorderPane();
         root.setTop(toolbar);
         root.setCenter(canvas);
@@ -336,8 +107,79 @@ public class EnhancedDrawingBoard extends Application {
         return button;
     }
 
+    // 新增：保存当前画布为PNG文件（包含当前绘制内容）
+    private void saveCanvasToPNG(Stage stage) {
+        WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+        canvas.snapshot(null, writableImage);
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("保存PNG文件");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG文件", "*.png"));
+        File file = fileChooser.showSaveDialog(stage);
+        if (file != null) {
+            try {
+                BufferedImage bufferedImage = writableImageToBufferedImage(writableImage);
+                ImageIO.write(bufferedImage, "png", file);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "保存失败: " + ex.getMessage());
+                alert.showAndWait();
+            }
+        }
+    }
+
+    // 新增：读取PNG作为背景图片，并显示在画布上
+    private void loadBackgroundFromPNG(Stage stage) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("选择PNG背景图片");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG文件", "*.png"));
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            try {
+                // 使用Image的公共构造函数加载图像
+                backgroundImage = new Image(file.toURI().toString());
+                painter.setBackgroundImage(backgroundImage);
+                painter.redrawAll(drawings);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "加载失败: " + ex.getMessage());
+                alert.showAndWait();
+            }
+        }
+    }
+
+    // 新增：绘制背景图像到画布
+    private void redrawWithBackground() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        if (backgroundImage != null) {
+            gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
+        }
+        // 不自动绘制已有drawings，绘图逻辑由Painter和MouseHandler控制，保持原样
+    }
+
+    // 新增：WritableImage转BufferedImage，绕过SwingFXUtils
+    private BufferedImage writableImageToBufferedImage(WritableImage writableImage) {
+        int width = (int) writableImage.getWidth();
+        int height = (int) writableImage.getHeight();
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        PixelReader pixelReader = writableImage.getPixelReader();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                javafx.scene.paint.Color fxColor = pixelReader.getColor(x, y);
+                int argb = ((int)(fxColor.getOpacity()*255) << 24) |
+                        ((int)(fxColor.getRed()*255) << 16) |
+                        ((int)(fxColor.getGreen()*255) << 8) |
+                        ((int)(fxColor.getBlue()*255));
+                bufferedImage.setRGB(x, y, argb);
+            }
+        }
+        return bufferedImage;
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
 }
+
 

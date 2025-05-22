@@ -3,6 +3,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 import java.util.List;
 
@@ -12,11 +13,32 @@ public class Painter {
     private Color currentColor = Color.BLACK;
     private final Color backgroundColor = Color.WHITE;
     private final double eraserWidth = 20;
-
+    private Image backgroundImage;
     public Painter(Canvas canvas) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
         clearCanvas();
+    }
+
+    public void setBackgroundImage(Image backgroundImage) {
+        this.backgroundImage = backgroundImage;
+        redrawBackground();
+    }
+
+    public void clearBackgroundImage() {
+        this.backgroundImage = null; // 移除背景图片
+        clearCanvas(); // 恢复白色背景
+    }
+
+    private void redrawBackground() {
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        if (backgroundImage != null) {
+            // 直接使用 backgroundImage，不需要转换
+            gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
+        } else {
+            gc.setFill(backgroundColor);
+            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        }
     }
 
     public void setCurrentColor(Color color) {
@@ -28,8 +50,7 @@ public class Painter {
     }
 
     public void clearCanvas() {
-        gc.setFill(backgroundColor);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        redrawBackground();
     }
 
     public void drawTempShape(
