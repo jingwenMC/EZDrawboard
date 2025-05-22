@@ -160,6 +160,7 @@ public class EnhancedDrawingBoard extends Application {
         clearCanvas();
         redrawAll();
         gc.setStroke(currentColor);
+        gc.setLineWidth(1);
 
         switch (currentTool) {
             case LINE:
