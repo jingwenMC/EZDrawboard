@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnhancedDrawingBoard extends Application {
-    private enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER }
+    private enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER ,}
     private double eraserWidth = 20;
     private double eraserHeight = 20;
     private Canvas canvas;
@@ -42,14 +42,14 @@ public class EnhancedDrawingBoard extends Application {
         RadioButton freehandButton = createToolButton("自由绘制", ToolType.FREEHAND, toolGroup);
         RadioButton eraserButton = createToolButton("橡皮擦", ToolType.ERASER, toolGroup);
         lineButton.setSelected(true);
-
         Button clearButton = new Button("清除");
+        Button talkButton = new Button("聊天");
         clearButton.setOnAction(e -> {
             drawings.clear();
             clearCanvas();
         });
 
-        HBox toolbar = new HBox(10, colorPicker, lineButton, rectButton, ellipseButton, freehandButton, eraserButton, clearButton);
+        HBox toolbar = new HBox(10, colorPicker, lineButton, rectButton, ellipseButton, freehandButton, eraserButton, clearButton,talkButton);
         toolbar.setStyle("-fx-padding: 10; -fx-background-color: #f0f0f0;");
 
         canvas = new Canvas(800, 550);
