@@ -15,4 +15,14 @@ RSP int:status(0:ok|1:error)
 status=0?RSP long:uid|long:timeout
 EOT
 
-[Request]
+[str:Create]
+REQ str:access_token|str:room_name|
+
+[str:Connect]
+REQ str:access_token|str:room_id
+RSP int:status(0:ok|1:token_error|2:room_id_error|3:no_permission)
+
+UDP based
+[str:TmpTx]
+
+access token 与 socket 绑定，每次请求不再单独输入

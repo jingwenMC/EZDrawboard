@@ -9,4 +9,7 @@ public interface DatabaseAccessor {
     User getUserByEmail(String email);
     User getUserByStr(String username);
     boolean authenticateUser(String str,String password_hash);
+    void updateToken(String username,String token);
+    long checkTokenExpire(String token);
+    String getTokenUsername(String token);
 }
