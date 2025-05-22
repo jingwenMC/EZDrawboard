@@ -1,0 +1,98 @@
+/*根容器样式*/
+.chat-container {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 15px;
+}
+
+/* 输入框样式 */
+.input-field {
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-padding: 8px 15px;
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+}
+
+/* 按钮样式 */
+.button {
+    -fx-background-radius: 15px;
+    -fx-padding: 8px 20px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 1, 1);
+    -fx-transition: all 0.2s;
+}
+
+.send-button {
+    -fx-background-color: #197de6;
+    -fx-text-fill: white;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-padding: 8px 20px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+.send-button:hover {
+    -fx-background-color: #0957aa;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);
+}
+
+/* 消息滚动区域 */
+.chat-scroll {
+    -fx-background-color: transparent;
+}
+
+/* 消息容器 */
+.chat-content {
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+/* 消息气泡 */
+.message-bubble {
+    -fx-background-radius: 15px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 1, 1);
+    -fx-max-width: 400px;
+}
+
+/* 我发送的消息 */
+.my-message {
+    -fx-background-color: #9bd09a;
+    -fx-border-color: #266426;
+    -fx-alignment: center-right;
+}
+
+/* 他人发送的消息 */
+.other-message {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E0E0E0;
+    -fx-alignment: center-left;
+}
+
+/* 消息时间戳样式 */
+.timestamp {
+    -fx-font-size: 10px;
+    -fx-text-fill: #666666;
+    -fx-padding: 2px 5px;
+}
+
+/* 用户名样式 */
+.username {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* 消息内容样式 */
+.message-content {
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+.dark-theme {
+    -fx-background-color: #2c3e50;
+    .chat-area {
+        -fx-background-color: #34495e;
+        -fx-text-fill: white;
+    }
+}
