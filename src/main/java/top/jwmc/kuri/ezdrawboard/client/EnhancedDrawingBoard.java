@@ -1,5 +1,4 @@
-"""package top.jwmc.kuri.ezdrawboard.client;
-import javafx.application.Application;
+package top.jwmc.kuri.ezdrawboard.client;/*import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -246,8 +245,7 @@ public class EnhancedDrawingBoard extends Application {
         }
     }
 
-}"""
-        package top.jwmc.kuri.ezdrawboard.client;
+}"""*/
 
 import javafx.application.Application;
 import javafx.geometry.Point2D;
