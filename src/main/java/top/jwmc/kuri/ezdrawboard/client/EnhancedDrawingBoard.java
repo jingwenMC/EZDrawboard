@@ -1,4 +1,4 @@
-package top.jwmc.kuri.ezdrawboard.client;
+"""package top.jwmc.kuri.ezdrawboard.client;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -246,4 +246,100 @@ public class EnhancedDrawingBoard extends Application {
         }
     }
 
+}"""
+        package top.jwmc.kuri.ezdrawboard.client;
+
+import javafx.application.Application;
+import javafx.geometry.Point2D;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EnhancedDrawingBoard extends Application {
+    public enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER }
+
+    public static class Drawing {
+        ToolType type;
+        Color color;
+        List<Point2D> path;
+        double x1, y1, x2, y2;
+
+        Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2) {
+            this.type = type;
+            this.color = color;
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+        }
+
+        Drawing(ToolType type, Color color, List<Point2D> path) {
+            this.type = type;
+            this.color = color;
+            this.path = path;
+        }
+    }
+
+    private ToolType[] currentTool = {ToolType.LINE};
+    private final List<Drawing> drawings = new ArrayList<>();
+    private Canvas canvas;
+    private Painter painter;
+    private MouseHandler mouseHandler;
+
+    @Override
+    public void start(Stage primaryStage) {
+        canvas = new Canvas(800, 550);
+        painter = new Painter(canvas);
+        mouseHandler = new MouseHandler(drawings, currentTool, painter);
+
+        ColorPicker colorPicker = new ColorPicker(Color.BLACK);
+        colorPicker.setOnAction(e -> painter.setCurrentColor(colorPicker.getValue()));
+
+        ToggleGroup group = new ToggleGroup();
+        RadioButton line = createToolButton("线条", ToolType.LINE, group);
+        RadioButton rect = createToolButton("矩形", ToolType.RECTANGLE, group);
+        RadioButton ellipse = createToolButton("椭圆", ToolType.ELLIPSE, group);
+        RadioButton freehand = createToolButton("自由绘制", ToolType.FREEHAND, group);
+        RadioButton eraser = createToolButton("橡皮擦", ToolType.ERASER, group);
+        line.setSelected(true);
+
+        Button clearButton = new Button("清除");
+        clearButton.setOnAction(e -> {
+            drawings.clear();
+            painter.clearCanvas();
+        });
+
+        HBox toolbar = new HBox(10, colorPicker, line, rect, ellipse, freehand, eraser, clearButton);
+        BorderPane root = new BorderPane();
+        root.setTop(toolbar);
+        root.setCenter(canvas);
+
+        canvas.setOnMousePressed(mouseHandler::onMousePressed);
+        canvas.setOnMouseDragged(mouseHandler::onMouseDragged);
+        canvas.setOnMouseReleased(mouseHandler::onMouseReleased);
+
+        primaryStage.setScene(new Scene(root));
+        primaryStage.setTitle("增强画板");
+        primaryStage.show();
+    }
+
+    private RadioButton createToolButton(String text, ToolType tool, ToggleGroup group) {
+        RadioButton button = new RadioButton(text);
+        button.setToggleGroup(group);
+        button.setOnAction(e -> currentTool[0] = tool);
+        return button;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
+
