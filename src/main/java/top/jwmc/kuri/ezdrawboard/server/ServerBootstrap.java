@@ -18,6 +18,6 @@ public class ServerBootstrap {
         String port = prop.getProperty("server.port");
         prop.store(new FileOutputStream("config.properties"), null);
         System.out.println(STR."Server starting on port \{port}...");
-        Server server = new Server(Integer.parseInt(port));
+        new Server(Integer.parseInt(port));
     }
 }

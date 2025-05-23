@@ -13,6 +13,7 @@ public class PacketInLogin extends Packet {
     public static void setDatabaseAccessor(DatabaseAccessor databaseAccessor) {
         PacketInLogin.databaseAccessor = databaseAccessor;
     }
+    String username;
     String token;
     @Override
     public String getName() {
@@ -22,6 +23,7 @@ public class PacketInLogin extends Packet {
     @Override
     public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
         PacketOutLogin packetOutLogin = new PacketOutLogin();
+        username = in.readUTF();
         token = in.readUTF();
         if(databaseAccessor.checkTokenExpire(token)<0) {
             packetOutLogin.result = PacketOutLogin.Result.FAILURE;
@@ -38,6 +40,7 @@ public class PacketInLogin extends Packet {
 
     @Override
     public void handlePacketOut(DataOutputStream out) throws IOException {
+        out.writeUTF(username);
         out.writeUTF(token);
     }
 }

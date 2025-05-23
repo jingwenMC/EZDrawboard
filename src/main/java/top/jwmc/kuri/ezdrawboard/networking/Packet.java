@@ -9,7 +9,7 @@ public abstract class Packet {
     public abstract void handlePacketOut(DataOutputStream out) throws IOException;
     public final void sendPacket(Socket socket) throws IOException {
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-        out.writeByte(0x10311101);
+        out.writeInt(0x10311101);
         out.writeUTF(getName());
         handlePacketOut(out);
         out.flush();
