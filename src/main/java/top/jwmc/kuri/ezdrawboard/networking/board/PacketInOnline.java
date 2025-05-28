@@ -20,9 +20,9 @@ public class PacketInOnline extends ServerContextualPacket implements Authentica
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
         if(getAgent().getBoard()==null)throw new IllegalStateException();
-        new PacketOutOnline(getAgent()).sendPacket(socket);
+        new PacketOutOnline(getAgent()).sendPacket(out);
     }
 
     @Override

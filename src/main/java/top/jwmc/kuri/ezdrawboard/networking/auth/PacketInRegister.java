@@ -23,7 +23,7 @@ public class PacketInRegister extends Packet {
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
         name = in.readUTF();
         passwordHash = in.readUTF();
         salt = in.readUTF();
@@ -31,7 +31,7 @@ public class PacketInRegister extends Packet {
         if(databaseAccessor.getUserByName(name) != null) {
             register.message="用户已注册";
             register.result= PacketOutRegister.Result.FAILURE;
-            register.sendPacket(socket);
+            register.sendPacket(out);
             return;
         }
         try {
@@ -42,7 +42,7 @@ public class PacketInRegister extends Packet {
             register.message="数据库错误";
             register.result= PacketOutRegister.Result.FAILURE;
         }
-        register.sendPacket(socket);
+        register.sendPacket(out);
     }
 
     @Override

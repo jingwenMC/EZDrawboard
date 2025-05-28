@@ -1,6 +1,7 @@
 package top.jwmc.kuri.ezdrawboard.client;
 
 import top.jwmc.kuri.ezdrawboard.networking.Router;
+import top.jwmc.kuri.ezdrawboard.networking.util.PacketPing;
 
 import java.io.*;
 import java.net.Socket;
@@ -21,7 +22,14 @@ public class ClientBootstrap {
         prop.store(new FileOutputStream("config.properties"), null);
         try (Socket socket = new Socket(ip, Integer.parseInt(port))) {
             Router router = new ClientRouterImpl(socket);
-            new Thread(()->Mainapp.main(socket,args)).start();
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            new Thread(()-> {
+                try {
+                    Mainapp.main(out,args);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
             try {
                 router.startHandleRequest();
             } catch (IOException e) {

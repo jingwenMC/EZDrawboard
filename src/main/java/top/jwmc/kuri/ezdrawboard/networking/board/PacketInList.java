@@ -21,8 +21,8 @@ public class PacketInList extends ServerContextualPacket implements Authenticate
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
-        new PacketOutList(getAgent()).sendPacket(socket);
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
+        new PacketOutList(getAgent()).sendPacket(out);
     }
 
     @Override

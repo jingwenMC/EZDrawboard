@@ -24,21 +24,21 @@ public class PacketInToken extends Packet {
     }
 
     @Override
-    public void handlePacketIn(Socket socket,DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out,DataInputStream in) throws IOException {
         username = in.readUTF();
         hashedPassword = in.readUTF();
         PacketOutToken token = new PacketOutToken();
         if(!databaseAccessor.authenticateUser(username,hashedPassword)) {
             token.message = "Invalid username or password";
             token.result= PacketOutToken.Result.FAILURE;
-            token.sendPacket(socket);
+            token.sendPacket(out);
         } else {
             UUID uuid = UUID.randomUUID();
             databaseAccessor.updateToken(username,uuid.toString());
             token.message = "Successfully updated token";
             token.result = PacketOutToken.Result.SUCCESS;
             token.token = uuid.toString();
-            token.sendPacket(socket);
+            token.sendPacket(out);
         }
     }
 

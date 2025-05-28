@@ -1,6 +1,7 @@
 package top.jwmc.kuri.ezdrawboard.networking;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class Router {
     private final ConcurrentHashMap<String, Packet> packets;
     private final Socket socket;
+    private DataOutputStream dataOutputStream;
     public abstract void initiateRouterMap(ConcurrentHashMap<String, Packet> packets);
     public Router(Socket socket) {
         this.socket = socket;
@@ -18,6 +20,7 @@ public abstract class Router {
 
     public void startHandleRequest() throws IOException {
         DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+        dataOutputStream = new DataOutputStream(socket.getOutputStream());
         while(!socket.isClosed()) {
             if(dataInputStream.available()<=0) break;
             int magic = dataInputStream.readInt();
@@ -28,14 +31,14 @@ public abstract class Router {
                     if((packet instanceof ServerContextualPacket serverContextualPacket) && (packet instanceof Authenticated)) {
                         if(serverContextualPacket.getAgent().getUserInfo()==null)throw new IllegalStateException();
                     }
-                    packet.handlePacketIn(socket, dataInputStream);
+                    packet.handlePacketIn(dataOutputStream, dataInputStream);
                 }
             }
         }
         System.out.println(STR."[CLOS] Closed connection from \{socket.getInetAddress()}");
     }
 
-    public Socket getSocket() {
-        return socket;
+    public DataOutputStream getDataOutputStream() {
+        return dataOutputStream;
     }
 }

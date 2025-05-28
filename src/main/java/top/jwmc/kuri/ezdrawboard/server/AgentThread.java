@@ -35,7 +35,7 @@ public class AgentThread extends Thread {
                 for(AgentThread agentThread : board.getUsers()) {
                     if(!agentThread.equals(this)) {
                         try {
-                            new PacketBoardTerminate(agentThread).sendPacket(agentThread.connection);
+                            new PacketBoardTerminate(agentThread).sendPacket(router.getDataOutputStream());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }

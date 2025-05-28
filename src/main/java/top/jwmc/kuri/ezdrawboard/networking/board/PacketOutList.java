@@ -24,7 +24,7 @@ public class PacketOutList extends ServerContextualPacket {
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
         items = in.readInt();
         int size = in.readInt();
         for (int i = 0; i < size; i++) {

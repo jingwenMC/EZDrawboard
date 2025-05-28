@@ -23,7 +23,7 @@ public class PacketInCreate extends ServerContextualPacket implements Authentica
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
         name = in.readUTF();
         description = in.readUTF();
         String id = UUID.randomUUID().toString();

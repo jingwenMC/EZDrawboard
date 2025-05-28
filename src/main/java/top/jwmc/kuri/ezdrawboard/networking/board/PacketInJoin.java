@@ -22,7 +22,7 @@ public class PacketInJoin extends ServerContextualPacket implements Authenticate
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
         id = in.readUTF();
         User user = getAgent().getUserInfo();
         Board board = getAgent().getInstance().getBoardMap().get(id);
@@ -36,7 +36,7 @@ public class PacketInJoin extends ServerContextualPacket implements Authenticate
             packet.message = "加入失败，未找到对应的房间";
             packet.result = PacketOutJoin.Result.FAILURE;
         }
-        packet.sendPacket(socket);
+        packet.sendPacket(out);
     }
 
     @Override

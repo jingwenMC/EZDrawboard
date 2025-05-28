@@ -17,7 +17,7 @@ public class PacketOutToken extends Packet {
     String token;
 
     @Override
-    public void handlePacketIn(Socket socket,DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out,DataInputStream in) throws IOException {
         //TODO: Client interaction
     }
 

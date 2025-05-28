@@ -20,7 +20,7 @@ public class PacketBoardTerminate extends ServerContextualPacket {
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
 
     }
 

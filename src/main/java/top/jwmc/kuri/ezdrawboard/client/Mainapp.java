@@ -4,16 +4,17 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import top.jwmc.kuri.ezdrawboard.networking.util.PacketPing;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
 public class Mainapp extends Application {
-    static Socket socket;
+    static DataOutputStream out;
     @Override
     public void start(Stage primaryStage) throws IOException {
         // 启动 Login 窗口
         Login loginApp = new Login();
-        new PacketPing().sendPacket(socket);
+        new PacketPing().sendPacket(out);
         try {
             loginApp.start(primaryStage);
         } catch (Exception e) {
@@ -21,7 +22,8 @@ public class Mainapp extends Application {
         }
     }
 
-    public static void main(Socket socket, String[] args) {
-        Mainapp.socket = socket;
+    public static void main(DataOutputStream out, String[] args) throws IOException {
+        new PacketPing().sendPacket(out);
+        Mainapp.out = out;
         launch(args);
     }}
