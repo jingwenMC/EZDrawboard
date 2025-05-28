@@ -6,11 +6,11 @@ import java.net.Socket;
 
 public class AgentThread extends Thread {
     private final Socket connection;
-    private final Router router;
+    private final ServerRouterImpl router;
     private User userInfo;
     public AgentThread(Socket _connection) {
         connection = _connection;
-        router = new Router(connection,this);
+        router = new ServerRouterImpl(connection,this);
         start();
     }
     @Override

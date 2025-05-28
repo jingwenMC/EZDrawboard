@@ -1,12 +1,12 @@
 package top.jwmc.kuri.ezdrawboard.networking.board;
 
-import top.jwmc.kuri.ezdrawboard.networking.ContextualPacket;
+import top.jwmc.kuri.ezdrawboard.networking.ServerContextualPacket;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class PacketOutList extends ContextualPacket {
+public class PacketOutList extends ServerContextualPacket {
     public int items;
     public ArrayList<String> ids;
     public ArrayList<String> names;
