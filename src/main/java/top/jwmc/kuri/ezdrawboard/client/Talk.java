@@ -52,10 +52,11 @@ public class Talk extends Application {
         inputField.setOnAction(e -> sendMessage());
 
         Button sendButton = new Button("发送");
+        Button onlineButton=new Button("在线好友");
         sendButton.getStyleClass().addAll("button", "send-button");  //发送按钮
         sendButton.setOnAction(e -> sendMessage());
 
-        Button onlineButton = new Button("查看在线好友");
+       // Button onlineButton = new Button("查看在线好友");
         onlineButton.setOnAction(e -> requestOnlineUsers());
 
         //输入布局
@@ -67,7 +68,7 @@ public class Talk extends Application {
 
         //加载CSS
         Scene scene = new Scene(root, 600, 400);
-        scene.getStylesheets().add(getClass().getResource("css/Talk.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("chat.css").toExternalForm());
         primaryStage.setTitle("聊天室");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -163,6 +164,16 @@ public class Talk extends Application {
             out.println("[请求在线用户]");
             //TODO:发送一个特殊请求，服务器可识别并返回在线用户列表（需配合服务器实现）
         }
+    }
+    public void showChatWindow() {
+        Platform.runLater(() -> {
+            try {
+                Stage stage = new Stage();
+                start(stage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 }

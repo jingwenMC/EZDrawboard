@@ -82,11 +82,16 @@ public class EnhancedDrawingBoard extends Application {
         // 新增保存和读取PNG按钮
         Button saveButton = new Button("保存背景PNG");
         Button loadButton = new Button("读取PNG背景");
+        Button talkButton=new Button("聊天");
+        talkButton.setOnAction(event -> {
+            Talk talk = new Talk();
+            talk.showChatWindow();
+        });
 
         saveButton.setOnAction(e -> saveCanvasToPNG(primaryStage));
         loadButton.setOnAction(e -> loadBackgroundFromPNG(primaryStage));
 
-        HBox toolbar = new HBox(10, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton);
+        HBox toolbar = new HBox(10, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton,talkButton);
         BorderPane root = new BorderPane();
         root.setTop(toolbar);
         root.setCenter(canvas);
