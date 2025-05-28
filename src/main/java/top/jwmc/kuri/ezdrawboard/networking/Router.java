@@ -25,10 +25,14 @@ public abstract class Router {
                 String packetName = dataInputStream.readUTF();
                 Packet packet = packets.get(packetName);
                 if(packet != null) {
+                    if((packet instanceof ServerContextualPacket serverContextualPacket) && (packet instanceof Authenticated)) {
+                        if(serverContextualPacket.getAgent().getUserInfo()==null)throw new IllegalStateException();
+                    }
                     packet.handlePacketIn(socket, dataInputStream);
                 }
             }
         }
+        System.out.println(STR."[CLOS] Closed connection from \{socket.getInetAddress()}");
     }
 
     public Socket getSocket() {

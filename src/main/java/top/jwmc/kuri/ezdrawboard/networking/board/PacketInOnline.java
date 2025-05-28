@@ -9,20 +9,20 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class PacketInList extends ServerContextualPacket implements Authenticated {
-
-    public PacketInList(AgentThread context) {
+public class PacketInOnline extends ServerContextualPacket implements Authenticated {
+    public PacketInOnline(AgentThread context) {
         super(context);
     }
 
     @Override
     public String getName() {
-        return "PacketInList";
+        return "PacketInOnline";
     }
 
     @Override
     public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
-        new PacketOutList(getAgent()).sendPacket(socket);
+        if(getAgent().getBoard()==null)throw new IllegalStateException();
+        new PacketOutOnline(getAgent()).sendPacket(socket);
     }
 
     @Override

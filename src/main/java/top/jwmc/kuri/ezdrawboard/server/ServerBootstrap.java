@@ -12,7 +12,7 @@ public class ServerBootstrap {
         File file = new File("config.properties");
         if (!file.exists()) {
             prop.setProperty("server.port", "6060");
-            prop.store(new FileOutputStream("config.properties"), "Drawboard Server Config v1 | By: xxx xxx xxx");
+            prop.store(new FileOutputStream("config.properties"), null);
         }
         prop.load(new FileInputStream("config.properties"));
         String port = prop.getProperty("server.port");

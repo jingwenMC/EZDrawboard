@@ -1,16 +1,22 @@
-package top.jwmc.kuri.ezdrawboard.networking.board;
+package top.jwmc.kuri.ezdrawboard.networking.util;
 
 import top.jwmc.kuri.ezdrawboard.networking.ServerContextualPacket;
+import top.jwmc.kuri.ezdrawboard.server.AgentThread;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class PacketOutFriendList extends ServerContextualPacket {
+public class PacketBoardTerminate extends ServerContextualPacket {
+    //TODO:WIP
+    public PacketBoardTerminate(AgentThread context) {
+        super(context);
+    }
+
     @Override
     public String getName() {
-        return "PacketOutFriendList";
+        return "";
     }
 
     @Override
