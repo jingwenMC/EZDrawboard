@@ -24,11 +24,21 @@ public class PacketInRegister extends Packet {
 
     @Override
     public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
+        name = in.readUTF();
+        passwordHash = in.readUTF();
+        salt = in.readUTF();
+        PacketOutRegister register = new PacketOutRegister();
+        if(databaseAccessor.getUserByName(name) != null) {
 
+            new PacketOutRegister().sendPacket(socket);
+            return;
+        }
     }
 
     @Override
     public void handlePacketOut(DataOutputStream out) throws IOException {
-
+        out.writeUTF(name);
+        out.writeUTF(passwordHash);
+        out.writeUTF(salt);
     }
 }

@@ -68,7 +68,7 @@ public class Talk extends Application {
 
         //加载CSS
         Scene scene = new Scene(root, 600, 400);
-        scene.getStylesheets().add(getClass().getResource("chat.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("css/Talk.css").toExternalForm());
         primaryStage.setTitle("聊天室");
         primaryStage.setScene(scene);
         primaryStage.show();
