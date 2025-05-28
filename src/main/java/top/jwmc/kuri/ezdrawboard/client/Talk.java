@@ -53,11 +53,17 @@ public class Talk extends Application {
 
         Button sendButton = new Button("发送");
         Button onlineButton=new Button("在线好友");
+        onlineButton.getStyleClass().addAll("button", "send-button");
+        onlineButton.setOnAction(event -> {
+            Online online = new Online();
+            online.showChatWindow();
+
+        });
+
         sendButton.getStyleClass().addAll("button", "send-button");  //发送按钮
         sendButton.setOnAction(e -> sendMessage());
 
-       // Button onlineButton = new Button("查看在线好友");
-        onlineButton.setOnAction(e -> requestOnlineUsers());
+
 
         //输入布局
         HBox inputBox = new HBox(10, inputField, sendButton, onlineButton);
