@@ -5,7 +5,6 @@ import top.jwmc.kuri.ezdrawboard.server.AgentThread;
 import top.jwmc.kuri.ezdrawboard.server.Board;
 
 import java.io.*;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class PacketOutList extends ServerContextualPacket {

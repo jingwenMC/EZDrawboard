@@ -5,12 +5,13 @@ import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.auth.*;
 import top.jwmc.kuri.ezdrawboard.networking.util.PacketPing;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerRouterImpl extends Router {
     private final AgentThread agent;
-    public ServerRouterImpl(Socket socket, AgentThread agent) {
+    public ServerRouterImpl(Socket socket, AgentThread agent) throws IOException {
         super(socket);
         this.agent = agent;
     }

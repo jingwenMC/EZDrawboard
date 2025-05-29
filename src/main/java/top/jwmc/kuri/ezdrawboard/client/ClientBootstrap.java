@@ -26,6 +26,7 @@ public class ClientBootstrap {
             new Thread(()-> {
                 try {
                     Mainapp.main(out,args);
+                    if(!socket.isClosed())socket.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

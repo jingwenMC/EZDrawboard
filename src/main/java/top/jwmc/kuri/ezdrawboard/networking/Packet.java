@@ -10,6 +10,5 @@ public abstract class Packet {
         out.writeInt(0x10311101);
         out.writeUTF(getName());
         handlePacketOut(out);
-        //out.flush();
     }
 }

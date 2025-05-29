@@ -12,7 +12,7 @@ public class AgentThread extends Thread {
     private User userInfo;
     private Board board;
     private final Server instance;
-    public AgentThread(Socket _connection,Server instance) {
+    public AgentThread(Socket _connection,Server instance) throws IOException {
         connection = _connection;
         this.instance = instance;
         router = new ServerRouterImpl(connection,this);
