@@ -83,6 +83,7 @@ public class EnhancedDrawingBoard extends Application {
         Button saveButton = new Button("保存背景PNG");
         Button loadButton = new Button("读取PNG背景");
         Button talkButton=new Button("聊天");
+        Button boardButton=new
         talkButton.setOnAction(event -> {
             Talk talk = new Talk();
             talk.showChatWindow();

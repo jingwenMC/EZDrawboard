@@ -61,9 +61,9 @@ public class Login extends Application {
     private void openChooseWindow() {
         try {
             // 创建新的 Stage 对象并启动 Choose 窗口
-            Choose chooseApp = new Choose();
-            Stage chooseStage = new Stage();
-            chooseApp.start(chooseStage);
+            EnhancedDrawingBoard printApp = new EnhancedDrawingBoard();
+            Stage printStage = new Stage();
+            printApp.start(printStage);
         } catch (Exception e) {
             e.printStackTrace();
         }
