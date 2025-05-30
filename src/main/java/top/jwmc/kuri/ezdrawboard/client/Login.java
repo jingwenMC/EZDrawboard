@@ -24,13 +24,17 @@ public class Login extends Application {
         PasswordField pwField = new PasswordField();
         Button loginBtn = new Button("登录");
         Button regst=new Button("注册");
-
+        regst.setOnAction(event -> {
+            openrgstWindow();
+        });
         grid.add(userLabel, 0, 0);
         grid.add(userTextField, 1, 0);
         grid.add(pwLabel, 0, 1);
         grid.add(pwField, 1, 1);
         grid.add(loginBtn, 1, 2);
         grid.add(regst,1,3);
+
+
 
         loginBtn.setOnAction(e -> {
             String username = userTextField.getText();
@@ -68,9 +72,16 @@ public class Login extends Application {
         }
     }
 
-    /**
-     * 验证登录信息
-     */
+    private void openrgstWindow() {
+        try {
+            RegisterApp registerApp=new RegisterApp();
+            Stage registstage=new Stage();
+            registerApp.start(registstage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private boolean isValidLogin(String username, String password) {
         return "admin".equals(username) && "123456".equals(password);
     }
