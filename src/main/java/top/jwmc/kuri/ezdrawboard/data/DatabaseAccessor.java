@@ -1,7 +1,6 @@
 package top.jwmc.kuri.ezdrawboard.data;
 
 public interface DatabaseAccessor {
-    User getUserByID(long UserID);
     User getUserByName(String username);
     User registerUser(String username,String password_hash,String salt)throws IllegalStateException;
     boolean authenticateUser(String str,String password_hash);

@@ -13,6 +13,7 @@ import java.net.Socket;
 public class Mainapp extends Application {
     public static boolean ONLINE_MODE = false;
     public static DataOutputStream out;
+    public static Painter painter;
     @Override
     public void start(Stage primaryStage) throws IOException {
         // 启动 Login 窗口
