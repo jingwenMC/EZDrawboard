@@ -6,7 +6,8 @@ import top.jwmc.kuri.ezdrawboard.data.User;
 public class MemoryImpl implements DatabaseAccessor {
     @Override
     public User getUserByName(String username) {
-        return new User(1,"admin",Util.getSHA256Str("123456","admin"),"admin");
+        if(username.equals("admin"))return new User(1,"admin",Util.getSHA256Str("123456","admin"),"admin");
+        else return null;
     }
 
     @Override
@@ -16,6 +17,7 @@ public class MemoryImpl implements DatabaseAccessor {
 
     @Override
     public boolean authenticateUser(String str, String password_hash) {
+        if(getUserByName(str)==null)return false;
         return getUserByName(str).passwordHash().equals(password_hash);
     }
 

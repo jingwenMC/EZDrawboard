@@ -1,5 +1,7 @@
 package top.jwmc.kuri.ezdrawboard.networking.auth;
 
+import top.jwmc.kuri.ezdrawboard.client.Login;
+import top.jwmc.kuri.ezdrawboard.client.RegisterApp;
 import top.jwmc.kuri.ezdrawboard.networking.Packet;
 
 import java.io.DataInputStream;
@@ -19,7 +21,10 @@ public class PacketOutRegister extends Packet {
     public void handlePacketIn(DataOutputStream out,DataInputStream in) throws IOException {
         result = Result.values()[in.readInt()];
         message = in.readUTF();
-        //TODO: Client interaction
+        RegisterApp.RESULT = result == Result.SUCCESS;
+        RegisterApp.MESSAGE = message;
+        RegisterApp.UPDATED = true;
+        System.out.println(message);
     }
 
     @Override

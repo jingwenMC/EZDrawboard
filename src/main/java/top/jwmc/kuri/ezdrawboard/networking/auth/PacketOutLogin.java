@@ -22,6 +22,7 @@ public class PacketOutLogin extends Packet {
         message = in.readUTF();
         Login.RESULT = result==Result.SUCCESS;
         Login.UPDATED = true;
+        System.out.println(message);
     }
 
     @Override

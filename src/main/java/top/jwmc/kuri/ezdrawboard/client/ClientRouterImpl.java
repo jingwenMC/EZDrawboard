@@ -3,6 +3,7 @@ package top.jwmc.kuri.ezdrawboard.client;
 import top.jwmc.kuri.ezdrawboard.networking.Packet;
 import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutLogin;
+import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutRegister;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,5 +19,7 @@ public class ClientRouterImpl extends Router {
     public void initiateRouterMap(ConcurrentHashMap<String, Packet> packets) {
         PacketOutLogin packetOutLogin = new PacketOutLogin();
         packets.put(packetOutLogin.getName(), packetOutLogin);
+        PacketOutRegister packetOutRegister = new PacketOutRegister();
+        packets.put(packetOutRegister.getName(), packetOutRegister);
     }
 }

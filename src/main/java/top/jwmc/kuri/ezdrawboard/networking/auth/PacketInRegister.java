@@ -12,7 +12,16 @@ public class PacketInRegister extends Packet {
     public static void setDatabaseAccessor(DatabaseAccessor databaseAccessor) {
         PacketInRegister.databaseAccessor = databaseAccessor;
     }
+    public PacketInRegister(String name,String passwordHash,String salt) {
+        super();
+        this.name=name;
+        this.passwordHash=passwordHash;
+        this.salt=salt;
+    }
 
+    public PacketInRegister() {
+        super();
+    }
     String name;
     String passwordHash;
     String salt;

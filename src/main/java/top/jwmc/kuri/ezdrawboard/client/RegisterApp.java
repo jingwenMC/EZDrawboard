@@ -7,9 +7,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import top.jwmc.kuri.ezdrawboard.networking.auth.PacketInRegister;
+import top.jwmc.kuri.ezdrawboard.server.Util;
+
+import java.io.IOException;
 
 public class RegisterApp extends Application {
-
+    public static volatile boolean UPDATED = false;
+    public static boolean RESULT = false;
+    public static String MESSAGE = "";
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("注册");
@@ -55,9 +61,25 @@ public class RegisterApp extends Application {
                 resultLabel.setText("两次密码不一致！");
                 resultLabel.setStyle("-fx-text-fill: red;");
             } else {
-                // TODO: 实际注册逻辑（如写入数据库、文件等）
-                resultLabel.setText("注册成功！");
-                resultLabel.setStyle("-fx-text-fill: green;");
+                try {
+                    UPDATED=false;
+                    RESULT=false;
+                    MESSAGE = "";
+                    new PacketInRegister(username, Util.getSHA256Str(password,username),username).sendPacket(Mainapp.out);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                while (!UPDATED) {
+                    Thread.onSpinWait();
+                }
+                if(RESULT) {
+                    resultLabel.setText(MESSAGE);
+                    resultLabel.setStyle("-fx-text-fill: green;");
+                } else {
+                    resultLabel.setText(MESSAGE);
+                    resultLabel.setStyle("-fx-text-fill: red;");
+                }
+
             }
         });
 
