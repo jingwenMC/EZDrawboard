@@ -34,13 +34,17 @@ public class Login extends Application {
         PasswordField pwField = new PasswordField();
         Button loginBtn = new Button("登录");
         Button regst=new Button("注册");
-
+        regst.setOnAction(event -> {
+            openrgstWindow();
+        });
         grid.add(userLabel, 0, 0);
         grid.add(userTextField, 1, 0);
         grid.add(pwLabel, 0, 1);
         grid.add(pwField, 1, 1);
         grid.add(loginBtn, 1, 2);
         grid.add(regst,1,3);
+
+
 
         loginBtn.setOnAction(e -> {
             String username = userTextField.getText();
@@ -55,8 +59,10 @@ public class Login extends Application {
             // 简单的验证逻辑
             if (isValidLogin()) {
                 showAlert(Alert.AlertType.INFORMATION, "登录成功", "欢迎 " + username + "!");
+
                 // 启动 Choose 窗口
                 openprintWindow();
+
                 // 关闭当前登录窗口
                 primaryStage.close();
             } else {
@@ -90,6 +96,19 @@ public class Login extends Application {
             Thread.onSpinWait();
         }
         return RESULT;
+    }
+    private void openrgstWindow() {
+        try {
+            RegisterApp registerApp=new RegisterApp();
+            Stage registstage=new Stage();
+            registerApp.start(registstage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private boolean isValidLogin(String username, String password) {
+        return "admin".equals(username) && "123456".equals(password);
     }
 
     /**
