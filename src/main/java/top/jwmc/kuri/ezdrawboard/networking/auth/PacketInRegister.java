@@ -23,16 +23,26 @@ public class PacketInRegister extends Packet {
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
         name = in.readUTF();
         passwordHash = in.readUTF();
         salt = in.readUTF();
         PacketOutRegister register = new PacketOutRegister();
         if(databaseAccessor.getUserByName(name) != null) {
-
-            new PacketOutRegister().sendPacket(socket);
+            register.message="用户已注册";
+            register.result= PacketOutRegister.Result.FAILURE;
+            register.sendPacket(out);
             return;
         }
+        try {
+            databaseAccessor.registerUser(name, passwordHash, salt);
+            register.message="注册成功，请登录";
+            register.result= PacketOutRegister.Result.SUCCESS;
+        } catch (IllegalStateException e) {
+            register.message="数据库错误";
+            register.result= PacketOutRegister.Result.FAILURE;
+        }
+        register.sendPacket(out);
     }
 
     @Override

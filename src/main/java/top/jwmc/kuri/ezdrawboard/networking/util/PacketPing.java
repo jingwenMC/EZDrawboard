@@ -14,11 +14,12 @@ public class PacketPing extends Packet {
     }
 
     @Override
-    public void handlePacketIn(Socket socket, DataInputStream in) throws IOException {
-        sendPacket(socket);
+    public void handlePacketIn(DataOutputStream out, DataInputStream in) throws IOException {
+        sendPacket(out);
     }
 
     @Override
     public void handlePacketOut(DataOutputStream out) throws IOException {
+        System.out.println("Ping");
     }
 }
