@@ -39,7 +39,7 @@ public class Login extends Application {
                 showAlert(Alert.AlertType.INFORMATION, "登录成功", "欢迎 " + username + "!");
 
                 // 启动 Choose 窗口
-                openChooseWindow();
+                openprintWindow();
 
                 // 关闭当前登录窗口
                 primaryStage.close();
@@ -58,10 +58,10 @@ public class Login extends Application {
     /**
      * 启动 Choose 窗口
      */
-    private void openChooseWindow() {
+    private void openprintWindow() {
         try {
             // 创建新的 Stage 对象并启动 Choose 窗口
-            EnhancedDrawingBoard printApp = new EnhancedDrawingBoard();
+            OnlineBoard printApp = new OnlineBoard();
             Stage printStage = new Stage();
             printApp.start(printStage);
         } catch (Exception e) {
