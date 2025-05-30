@@ -59,5 +59,4 @@ public class PacketDrawFreehand extends ServerContextualPacket implements Authen
         out.writeInt(tool.ordinal());
         out.writeInt(eraserSize);
     }
-    //TODO
 }
