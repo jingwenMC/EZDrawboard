@@ -23,12 +23,14 @@ public class Login extends Application {
         Label pwLabel = new Label("密码:");
         PasswordField pwField = new PasswordField();
         Button loginBtn = new Button("登录");
+        Button regst=new Button("注册");
 
         grid.add(userLabel, 0, 0);
         grid.add(userTextField, 1, 0);
         grid.add(pwLabel, 0, 1);
         grid.add(pwField, 1, 1);
         grid.add(loginBtn, 1, 2);
+        grid.add(regst,1,3);
 
         loginBtn.setOnAction(e -> {
             String username = userTextField.getText();
@@ -55,12 +57,9 @@ public class Login extends Application {
         primaryStage.show();
     }
 
-    /**
-     * 启动 Choose 窗口
-     */
+
     private void openprintWindow() {
         try {
-            // 创建新的 Stage 对象并启动 Choose 窗口
             OnlineBoard printApp = new OnlineBoard();
             Stage printStage = new Stage();
             printApp.start(printStage);
