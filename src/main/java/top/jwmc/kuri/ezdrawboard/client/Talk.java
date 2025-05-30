@@ -8,22 +8,25 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
+import top.jwmc.kuri.ezdrawboard.data.Message;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketChat;
+
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 
 
 public class Talk extends Application {
 
     private Label titleLabel;
-    private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
     private ScrollPane chatScroll = new ScrollPane();
     private VBox chatContent = new VBox(5); // 消息容器
     private TextField inputField;
-    private String username = "用户" + (int)(Math.random() * 1000); // 自动生成用户名
+    private final String username = "用户" + Mainapp.user.name(); // 自动生成用户名
+    public static final LinkedList<Message> chatMessages = new LinkedList<>();
+    public static Talk INSTANCE;
 
     public static void main(String[] args) {
         launch(args);
@@ -31,6 +34,7 @@ public class Talk extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        INSTANCE = this;
         // ===== 界面布局 =====
         VBox root = new VBox(10);
         root.getStyleClass().add("chat-container");//根容器
@@ -63,8 +67,6 @@ public class Talk extends Application {
         sendButton.getStyleClass().addAll("button", "send-button");  //发送按钮
         sendButton.setOnAction(e -> sendMessage());
 
-
-
         //输入布局
         HBox inputBox = new HBox(10, inputField, sendButton, onlineButton);
         inputBox.setPadding(new Insets(10, 0, 0, 0));
@@ -79,11 +81,13 @@ public class Talk extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // ===== 启动连接线程 =====
-        connectToServer();
+        //Sync
+        for(Message message : chatMessages) {
+            createMessageBubble(message.time(),message.user(),message.content(),message.user().equals(Mainapp.user.name()));
+        }
     }
 
-    private void createMessageBubble(String time, String user, String content, boolean isCurrentUser) {
+    public void createMessageBubble(String time, String user, String content, boolean isCurrentUser) {
         HBox messageBubble = new HBox();
         messageBubble.getStyleClass().addAll("message-bubble",
                 isCurrentUser ? "my-message" : "other-message");
@@ -113,63 +117,21 @@ public class Talk extends Application {
         chatScroll.setVvalue(1.0);
     }
 
-    private void connectToServer() {
-        try {
-            socket = new Socket("localhost", 12345);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            // 接收线程
-            new Thread(() -> {
-                try {
-                    String msg;
-                    while ((msg = in.readLine()) != null) {
-                        String[] parts = msg.split("\\|"); //服务器发送格式：时间|用户|内容
-                        if (parts.length == 3) {
-                            boolean isCurrentUser = parts[1].equals(username);
-                            String finalMsg = msg;
-                            Platform.runLater(() -> {
-                                // 使用前面提到的消息气泡创建逻辑
-                                createMessageBubble(parts[0], parts[1], parts[2], isCurrentUser);
-                            });
-                        }
-                    }
-                } catch (IOException e) {
-                    Platform.runLater(() ->  createMessageBubble(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")),
-                            "系统",
-                            "服务器连接已断开",
-                            false
-                    ));
-                }
-            }).start();
-
-            // 通知服务器新用户上线
-            out.println("[上线] " + username);
-
-        } catch (IOException e) {
-            Platform.runLater(() -> createMessageBubble(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")),
-                    "系统",
-                    "无法连接到服务器：" + e.getMessage(),
-                    false
-            ));
-        }
-    }
-
     private void sendMessage() {
         String message = inputField.getText().trim();
-        if (!message.isEmpty() && out != null) {
+        if (!message.isEmpty()) {
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-            String formattedMsg = String.format("%s|%s|%s", timestamp, username, message);
-            out.println(formattedMsg);
+            try {
+                new PacketChat(new Message(timestamp,Mainapp.user.name(),message)).sendPacket(Mainapp.out);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             inputField.clear();
         }
     }
 
     private void requestOnlineUsers() {
-        if (out != null) {
-            out.println("[请求在线用户]");
-            //TODO:发送一个特殊请求，服务器可识别并返回在线用户列表（需配合服务器实现）
-        }
+        //TODO
     }
 
     public void showChatWindow() {

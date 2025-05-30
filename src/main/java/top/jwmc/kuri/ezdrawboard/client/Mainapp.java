@@ -2,6 +2,7 @@ package top.jwmc.kuri.ezdrawboard.client;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import top.jwmc.kuri.ezdrawboard.data.User;
 import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.util.PacketPing;
 
@@ -13,6 +14,8 @@ import java.net.Socket;
 public class Mainapp extends Application {
     public static boolean ONLINE_MODE = false;
     public static DataOutputStream out;
+    public static Painter painter;
+    public static User user;
     @Override
     public void start(Stage primaryStage) throws IOException {
         // 启动 Login 窗口
@@ -34,7 +37,6 @@ public class Mainapp extends Application {
                     new PacketPing().sendPacket(out);
                     Mainapp.out = out;
                     ONLINE_MODE = true;
-
                     if(!socket.isClosed())socket.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -46,4 +48,5 @@ public class Mainapp extends Application {
                 throw new RuntimeException(e);
             }
         }
-    }}
+    }
+}

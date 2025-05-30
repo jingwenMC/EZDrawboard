@@ -4,7 +4,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketDrawFreehand;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Painter {
@@ -19,6 +21,7 @@ public class Painter {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
         clearCanvas();
+        Mainapp.painter = this;
     }
 
     public void setBackgroundImage(Image backgroundImage) {
@@ -72,10 +75,22 @@ public class Painter {
         }
     }
 
-
     public void drawFreehandPath(List<Point2D> path, EnhancedDrawingBoard.ToolType tool, int eraserSize) {
-        if (path.isEmpty()) return;
+        drawFreehandPath(false, path, tool, eraserSize);
+    }
 
+
+    public void drawFreehandPath(boolean receive, List<Point2D> path, EnhancedDrawingBoard.ToolType tool, int eraserSize) {
+        if(!receive) {
+            if(Mainapp.ONLINE_MODE) {
+                try {
+                    new PacketDrawFreehand(path, tool, eraserSize).sendPacket(Mainapp.out);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        if (path.isEmpty()) return;
         if (tool == EnhancedDrawingBoard.ToolType.ERASER) {
             gc.setFill(backgroundColor);
             for (Point2D point : path) {

@@ -67,4 +67,8 @@ public class AgentThread extends Thread {
     public Server getInstance() {
         return instance;
     }
+
+    public ServerRouterImpl getRouter() {
+        return router;
+    }
 }
