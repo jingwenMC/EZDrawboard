@@ -1,12 +1,13 @@
 package top.jwmc.kuri.ezdrawboard.client;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.ArrayList;
@@ -25,11 +26,28 @@ import java.awt.image.BufferedImage;
 public class EnhancedDrawingBoard extends Application {
     public enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER }
 
+    public enum EraserMode{
+        PIXEL("像素点擦除"),
+        LINE("线擦除");
+
+        private final String displayName;
+
+        EraserMode(String displayName) {
+            this.displayName = displayName;
+        }
+        @Override
+        public String toString(){
+            return displayName;
+        }
+    }
+
     public static class Drawing {
         ToolType type;
         Color color;
         List<Point2D> path;
+        EraserMode eraserMode;
         double x1, y1, x2, y2;
+        int eraserSize;     //橡皮擦大小
 
         Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2) {
             this.type = type;
@@ -45,6 +63,15 @@ public class EnhancedDrawingBoard extends Application {
             this.color = color;
             this.path = path;
         }
+
+        //橡皮擦构造方法
+        Drawing(ToolType type, Color color, List<Point2D> path, int eraserSize, EraserMode eraserMode) {
+            this.type = type;
+            this.color = color;
+            this.path = path;
+            this.eraserSize = eraserSize;
+            this.eraserMode = eraserMode;
+        }
     }
 
     private ToolType[] currentTool = {ToolType.LINE};
@@ -53,14 +80,17 @@ public class EnhancedDrawingBoard extends Application {
     private Painter painter;
     private MouseHandler mouseHandler;
 
-    // 新增成员变量：背景图像
+    // 新增成员变量：背景图像、橡皮擦相关成员变量
     private Image backgroundImage = null;
+    private EraserMode currentEraserMode = EraserMode.PIXEL;
+    private int eraserSize = 5;
+    private Slider eraserSizeSlider;
 
     @Override
     public void start(Stage primaryStage) {
         canvas = new Canvas(800, 550);
         painter = new Painter(canvas);
-        mouseHandler = new MouseHandler(drawings, currentTool, painter);
+        mouseHandler = new MouseHandler(drawings, currentTool, painter, this);
 
         ColorPicker colorPicker = new ColorPicker(Color.BLACK);
         colorPicker.setOnAction(e -> painter.setCurrentColor(colorPicker.getValue()));
@@ -92,6 +122,41 @@ public class EnhancedDrawingBoard extends Application {
         saveButton.setOnAction(e -> saveCanvasToPNG(primaryStage));
         loadButton.setOnAction(e -> loadBackgroundFromPNG(primaryStage));
 
+        //橡皮擦模式控件
+        VBox eraserControls = new VBox(5);
+        eraserControls.setPadding(new Insets(5));
+        eraserControls.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-radius: 5;");
+        Label eraserLabel = new Label("橡皮擦模式选择：");
+        eraserLabel.setStyle("-fx-font-weight: bold;");
+
+        //橡皮擦模式选择
+        ToggleGroup eraserModeGroup = new ToggleGroup();
+        RadioButton pixelMode = new RadioButton(EraserMode.PIXEL.toString());
+        pixelMode.setToggleGroup(eraserModeGroup);
+        pixelMode.setSelected(true);
+        pixelMode.setOnAction(e -> currentEraserMode = EraserMode.PIXEL);
+        RadioButton lineMode = new RadioButton(EraserMode.LINE.toString());
+        lineMode.setToggleGroup(eraserModeGroup);
+        lineMode.setOnAction(e -> currentEraserMode = EraserMode.LINE);
+
+        HBox eraserModeBox = new HBox(10, pixelMode, lineMode);
+
+        //橡皮擦大小滑块
+        Label sizeLabel = new Label("橡皮擦大小：");
+        eraserSizeSlider = new Slider(1, 50, eraserSize);
+        eraserSizeSlider.setShowTickLabels(true);
+        eraserSizeSlider.setShowTickMarks(true);
+        eraserSizeSlider.setMajorTickUnit(10);
+        eraserSizeSlider.setMinorTickCount(5);
+        eraserSizeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            eraserSize = newVal.intValue();
+        });
+
+        eraserControls.getChildren().addAll(eraserLabel, eraserModeBox, sizeLabel, eraserSizeSlider);
+        eraserControls.visibleProperty().bind(eraser.selectedProperty());
+        eraserControls.managedProperty().bind(eraser.selectedProperty());
+
+
         HBox toolbar = new HBox(10, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton,talkButton);
         BorderPane root = new BorderPane();
         root.setTop(toolbar);
@@ -111,6 +176,14 @@ public class EnhancedDrawingBoard extends Application {
         button.setToggleGroup(group);
         button.setOnAction(e -> currentTool[0] = tool);
         return button;
+    }
+
+    public EraserMode getCurrentEraserMode() {
+        return currentEraserMode;
+    }
+
+    public int getEraserSize(){
+        return eraserSize;
     }
 
     // 新增：保存当前画布为PNG文件（包含当前绘制内容）

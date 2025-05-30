@@ -171,6 +171,7 @@ public class Talk extends Application {
             //TODO:发送一个特殊请求，服务器可识别并返回在线用户列表（需配合服务器实现）
         }
     }
+
     public void showChatWindow() {
         Platform.runLater(() -> {
             try {
@@ -181,5 +182,4 @@ public class Talk extends Application {
             }
         });
     }
-
 }
