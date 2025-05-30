@@ -1,10 +1,10 @@
 package top.jwmc.kuri.ezdrawboard.client;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -45,6 +45,7 @@ public class EnhancedDrawingBoard extends Application {
         ToolType type;
         Color color;
         List<Point2D> path;
+        EraserMode eraserMode;
         double x1, y1, x2, y2;
         int eraserSize;     //橡皮擦大小
 
@@ -69,6 +70,7 @@ public class EnhancedDrawingBoard extends Application {
             this.color = color;
             this.path = path;
             this.eraserSize = eraserSize;
+            this.eraserMode = eraserMode;
         }
     }
 

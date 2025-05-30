@@ -12,7 +12,7 @@ import java.net.Socket;
 
 public class Mainapp extends Application {
     public static boolean ONLINE_MODE = false;
-    static DataOutputStream out;
+    public static DataOutputStream out;
     @Override
     public void start(Stage primaryStage) throws IOException {
         // 启动 Login 窗口

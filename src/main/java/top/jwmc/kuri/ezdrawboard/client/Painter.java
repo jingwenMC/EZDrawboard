@@ -31,7 +31,7 @@ public class Painter {
         clearCanvas(); // 恢复白色背景
     }
 
-    private void redrawBackground() {
+    public void redrawBackground() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         if (backgroundImage != null) {
             // 直接使用 backgroundImage，不需要转换
@@ -129,7 +129,7 @@ public class Painter {
 //                }
 //            }
             else if (drawing.type == EnhancedDrawingBoard.ToolType.ERASER) {
-                if (drawing.eraserType == EnhancedDrawingBoard.EraserMode.PIXEL) {
+                if (drawing.eraserMode == EnhancedDrawingBoard.EraserMode.PIXEL) {
                     // 点擦除：在路径的每个点上画圆
                     gc.setFill(backgroundColor);
                     for (Point2D point : drawing.path) {
