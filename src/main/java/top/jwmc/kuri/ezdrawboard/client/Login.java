@@ -1,15 +1,25 @@
 package top.jwmc.kuri.ezdrawboard.client;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import top.jwmc.kuri.ezdrawboard.networking.Router;
+import top.jwmc.kuri.ezdrawboard.networking.auth.PacketInLogin;
+import top.jwmc.kuri.ezdrawboard.networking.util.PacketPing;
+import top.jwmc.kuri.ezdrawboard.server.Util;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 public class Login extends Application {
-
+    public static volatile boolean UPDATED = false;
+    public static boolean RESULT = false;
     @Override
     public void start(Stage primaryStage) {
         GridPane grid = new GridPane();
@@ -35,14 +45,18 @@ public class Login extends Application {
         loginBtn.setOnAction(e -> {
             String username = userTextField.getText();
             String password = pwField.getText();
-
+            try {
+                UPDATED = false;
+                RESULT = false;
+                new PacketInLogin(username, Util.getSHA256Str(password,username)).sendPacket(Mainapp.out);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             // 简单的验证逻辑
-            if (isValidLogin(username, password)) {
+            if (isValidLogin()) {
                 showAlert(Alert.AlertType.INFORMATION, "登录成功", "欢迎 " + username + "!");
-
                 // 启动 Choose 窗口
                 openprintWindow();
-
                 // 关闭当前登录窗口
                 primaryStage.close();
             } else {
@@ -71,8 +85,11 @@ public class Login extends Application {
     /**
      * 验证登录信息
      */
-    private boolean isValidLogin(String username, String password) {
-        return "admin".equals(username) && "123456".equals(password);
+    private boolean isValidLogin() {
+        while (!UPDATED) {
+            Thread.onSpinWait();
+        }
+        return RESULT;
     }
 
     /**
@@ -84,5 +101,20 @@ public class Login extends Application {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    public void boot(String ip, int port, Stage mainStage) throws IOException {
+        new Thread(()->{
+            try (Socket socket = new Socket(ip, port)) {
+                    Router router = new ClientRouterImpl(socket);
+                    new PacketPing().sendPacket(router.getDataOutputStream());
+                    Mainapp.out = router.getDataOutputStream();
+                    Mainapp.ONLINE_MODE = true;
+                    router.startHandleRequest();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+        Platform.runLater(()->start(mainStage));
     }
 }

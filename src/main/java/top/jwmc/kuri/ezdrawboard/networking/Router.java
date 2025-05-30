@@ -20,7 +20,7 @@ public abstract class Router {
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         packets = new ConcurrentHashMap<>();
         //注册路由
-        initiateRouterMap(packets);
+        //initiateRouterMap(packets);
     }
 
     public void startHandleRequest() throws IOException {
@@ -52,5 +52,9 @@ public abstract class Router {
 
     public DataOutputStream getDataOutputStream() {
         return dataOutputStream;
+    }
+
+    public ConcurrentHashMap<String, Packet> getPackets() {
+        return packets;
     }
 }

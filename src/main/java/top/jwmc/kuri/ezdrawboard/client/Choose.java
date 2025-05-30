@@ -66,7 +66,7 @@ public class Choose extends Application {
 
 
     private void handleOnlineMode() {
-        showAlert("模式选择", "已选择在线模式", "需要连接服务器\n正在验证网络...");
+        showAlert("模式选择", "已选择在线模式", "需要连接服务器\n需要验证网络...");
         openloginWindow();
     }
 
@@ -90,8 +90,8 @@ public class Choose extends Application {
     private void openloginWindow() {
         try {
             Login loginapp=new Login();
-            Stage loginstage=new Stage();
-            loginapp.start(loginstage);
+            Stage loginStage = new Stage();
+            loginapp.boot(ClientBootstrap.IP,ClientBootstrap.PORT,loginStage);
         } catch (Exception e) {
             e.printStackTrace();
         }

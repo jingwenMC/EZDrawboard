@@ -1,5 +1,7 @@
 package top.jwmc.kuri.ezdrawboard.server;
 
+import top.jwmc.kuri.ezdrawboard.networking.auth.PacketInLogin;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,6 +20,7 @@ public class ServerBootstrap {
         String port = prop.getProperty("server.port");
         prop.store(new FileOutputStream("config.properties"), null);
         System.out.println(STR."Server starting on port \{port}...");
+        PacketInLogin.setDatabaseAccessor(new MemoryImpl());
         new Server(Integer.parseInt(port));
     }
 }

@@ -14,6 +14,7 @@ public class ServerRouterImpl extends Router {
     public ServerRouterImpl(Socket socket, AgentThread agent) throws IOException {
         super(socket);
         this.agent = agent;
+        initiateRouterMap(getPackets());
     }
 
     @Override

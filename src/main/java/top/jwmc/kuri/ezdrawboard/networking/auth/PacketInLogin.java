@@ -8,10 +8,15 @@ import top.jwmc.kuri.ezdrawboard.server.AgentThread;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
 public class PacketInLogin extends ServerContextualPacket {
     private static DatabaseAccessor databaseAccessor;
+
+    public PacketInLogin(String username,String hash) {
+        super(null);
+        this.username = username;
+        this.token = hash;
+    }
 
     public PacketInLogin(AgentThread context) {
         super(context);
