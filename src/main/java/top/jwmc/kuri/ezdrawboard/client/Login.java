@@ -97,6 +97,7 @@ public class Login extends Application {
         }
         return RESULT;
     }
+
     private void openrgstWindow() {
         try {
             RegisterApp registerApp=new RegisterApp();
