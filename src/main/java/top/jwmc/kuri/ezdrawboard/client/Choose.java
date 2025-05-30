@@ -67,6 +67,7 @@ public class Choose extends Application {
 
     private void handleOnlineMode() {
         showAlert("模式选择", "已选择在线模式", "需要连接服务器\n正在验证网络...");
+
     }
 
     private void showAlert(String title, String header, String content) {
@@ -85,5 +86,8 @@ public class Choose extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static void main(String[] args) {
+        launch(args);
     }
 }
