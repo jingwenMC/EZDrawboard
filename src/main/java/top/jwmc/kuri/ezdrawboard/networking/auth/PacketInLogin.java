@@ -32,15 +32,15 @@ public class PacketInLogin extends ServerContextualPacket {
         PacketOutLogin packetOutLogin = new PacketOutLogin();
         username = in.readUTF();
         token = in.readUTF();
-        if(databaseAccessor.checkTokenExpire(username,token)<0) {
-            packetOutLogin.result = PacketOutLogin.Result.FAILURE;
-            packetOutLogin.message = "凭证无效";
-            packetOutLogin.sendPacket(out);
-        } else {
+        if(databaseAccessor.authenticateUser(username,token)) {
             User user = databaseAccessor.getUserByName(username);
             getAgent().setUserInfo(user);
             packetOutLogin.result = PacketOutLogin.Result.SUCCESS;
             packetOutLogin.message = "登录成功";
+            packetOutLogin.sendPacket(out);
+        } else {
+            packetOutLogin.result = PacketOutLogin.Result.FAILURE;
+            packetOutLogin.message = "登录失败，可能是错误的用户名或密码";
             packetOutLogin.sendPacket(out);
         }
     }

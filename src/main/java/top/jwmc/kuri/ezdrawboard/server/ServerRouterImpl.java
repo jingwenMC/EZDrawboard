@@ -22,8 +22,6 @@ public class ServerRouterImpl extends Router {
         packets.put(packetInLogin.getName(), packetInLogin);
         PacketInRegister packetInRegister = new PacketInRegister();
         packets.put(packetInRegister.getName(), packetInRegister);
-        PacketInToken packetInToken = new PacketInToken();
-        packets.put(packetInToken.getName(), packetInToken);
         PacketPing packetPing = new PacketPing();
         packets.put(packetPing.getName(), packetPing);
     }
