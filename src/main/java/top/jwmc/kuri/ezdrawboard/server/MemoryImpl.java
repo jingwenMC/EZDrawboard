@@ -6,13 +6,14 @@ import top.jwmc.kuri.ezdrawboard.data.User;
 public class MemoryImpl implements DatabaseAccessor {
     @Override
     public User getUserByName(String username) {
-        if(username.equals("admin"))return new User(1,"admin",Util.getSHA256Str("123456","admin"),"admin");
+        if(username.equals("admin"))return new User("admin","admin",Util.getSHA256Str("123456","admin"),"admin");
+        if(username.equals("2"))return new User("2","2",Util.getSHA256Str("123456","2"),"2");
         else return null;
     }
 
     @Override
     public User registerUser(String username, String password_hash, String salt) throws IllegalStateException {
-        return new User(1,"admin",Util.getSHA256Str("123456","admin"),"admin");
+        return new User("admin","admin",Util.getSHA256Str("123456","admin"),"admin");
     }
 
     @Override

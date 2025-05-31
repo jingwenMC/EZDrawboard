@@ -14,12 +14,12 @@ public class ClientTest {
             new PacketPing().sendPacket(out);
             DataInputStream in = new DataInputStream(socket.getInputStream());
             if(in.readInt()==0x10311101) {
-                System.out.println(STR."Service:\{in.readUTF()}");
+                System.out.println("Service:"+in.readUTF());
             }
             new PacketPing().sendPacket(out);
             DataInputStream in2 = new DataInputStream(socket.getInputStream());
             if(in.readInt()==0x10311101) {
-                System.out.println(STR."Service:\{in.readUTF()}");
+                System.out.println("Service:"+in.readUTF());
             }
         }
     }

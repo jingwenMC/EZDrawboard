@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
@@ -111,10 +112,36 @@ public class OnlineBoard extends Application {
         if(selectedUser.equals(FETCH_BOARD) || selectedUser.equals(NO_BOARD)) return;
         PacketInJoin packetInJoin = new PacketInJoin(selectedUser.equals(CREATE_BOARD)?Mainapp.user.name():selectedUser);
         try {
+            UPDATED = false;
+            MESSAGE = "";
+            RESULT = false;
             packetInJoin.sendPacket(Mainapp.out);
-            //TODO
+            while (!UPDATED) {
+                Thread.onSpinWait();
+            }
+            if(RESULT) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText(MESSAGE);
+                alert.showAndWait();
+                openPrintWindow();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText(MESSAGE);
+                alert.showAndWait();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void openPrintWindow() {
+        try {
+            // 创建新的 Stage 对象并启动 Choose 窗口
+            EnhancedDrawingBoard printApp = new EnhancedDrawingBoard();
+            Stage printStage = new Stage();
+            printApp.start(printStage);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -21,7 +21,7 @@ public class ServerBootstrap {
         prop.load(new FileInputStream("config.properties"));
         String port = prop.getProperty("server.port");
         prop.store(new FileOutputStream("config.properties"), null);
-        System.out.println(STR."Server starting on port \{port}...");
+        System.out.println("Server starting on port "+port+"...");
         DatabaseAccessor databaseAccessor = new MemoryImpl();
         PacketInLogin.setDatabaseAccessor(databaseAccessor);
         PacketInRegister.setDatabaseAccessor(databaseAccessor);

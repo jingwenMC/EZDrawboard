@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import top.jwmc.kuri.ezdrawboard.data.User;
 import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketInLogin;
 import top.jwmc.kuri.ezdrawboard.networking.util.PacketPing;
@@ -49,17 +50,18 @@ public class Login extends Application {
         loginBtn.setOnAction(e -> {
             String username = userTextField.getText();
             String password = pwField.getText();
+            String hash = Util.getSHA256Str(password,username);
             try {
                 UPDATED = false;
                 RESULT = false;
-                new PacketInLogin(username, Util.getSHA256Str(password,username)).sendPacket(Mainapp.out);
+                new PacketInLogin(username, hash).sendPacket(Mainapp.out);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
             // 简单的验证逻辑
             if (isValidLogin()) {
                 showAlert(Alert.AlertType.INFORMATION, "登录成功", "欢迎 " + username + "!");
-
+                Mainapp.user = new User(username,username,hash,username);
                 // 启动 Choose 窗口
                 openprintWindow();
 

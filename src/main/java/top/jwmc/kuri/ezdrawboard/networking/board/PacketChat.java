@@ -1,5 +1,6 @@
 package top.jwmc.kuri.ezdrawboard.networking.board;
 
+import javafx.application.Platform;
 import top.jwmc.kuri.ezdrawboard.client.Mainapp;
 import top.jwmc.kuri.ezdrawboard.client.Talk;
 import top.jwmc.kuri.ezdrawboard.data.Message;
@@ -22,6 +23,10 @@ public class PacketChat extends ServerContextualPacket implements Authenticated 
         super(context);
     }
 
+    public PacketChat() {
+        super(null);
+    }
+
     @Override
     public String getName() {
         return "PacketChat";
@@ -32,7 +37,8 @@ public class PacketChat extends ServerContextualPacket implements Authenticated 
         message = new Message(in.readUTF(),in.readUTF(),in.readUTF());
         if(agent==null) {
             Talk.chatMessages.add(message);
-            if(Talk.INSTANCE!=null)Talk.INSTANCE.createMessageBubble(message.time(),message.user(),message.content(),message.user().equals(Mainapp.user.name()));
+            if(Talk.INSTANCE!=null)
+                Platform.runLater(()->Talk.INSTANCE.createMessageBubble(message.time(),message.user(),message.content(),message.user().equals(Mainapp.user.name())));
         } else {
             for(AgentThread agentThread : agent.getBoard().getUsers()) {
                 sendPacket(agentThread.getRouter().getDataOutputStream());

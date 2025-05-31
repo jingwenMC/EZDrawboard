@@ -25,8 +25,8 @@ public class AgentThread extends Thread {
             router.startHandleRequest();
             if(!connection.isClosed())connection.close();
         }catch (Exception e) {
-            System.err.println(STR."Agent thread got exception: \{e}");
-            System.err.println(STR."Socket INET: \{connection.getInetAddress()}");
+            System.err.println("Agent thread got exception: "+e);
+            System.err.println("Socket INET: "+connection.getInetAddress());
             e.printStackTrace();
         }
         //离线销毁

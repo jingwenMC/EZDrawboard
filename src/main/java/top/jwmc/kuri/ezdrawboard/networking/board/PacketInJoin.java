@@ -39,6 +39,7 @@ public class PacketInJoin extends ServerContextualPacket implements Authenticate
             if(id.equals(user.name())) {
                 Board boardC = new Board(id,id,"",getAgent());
                 getAgent().getInstance().getBoardMap().put(id,boardC);
+                getAgent().setBoard(boardC);
                 packet.message = "创建成功";
                 packet.result = PacketOutJoin.Result.SUCCESS;
             } else {

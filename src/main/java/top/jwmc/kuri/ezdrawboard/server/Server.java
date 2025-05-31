@@ -12,7 +12,7 @@ public class Server {
         try(ServerSocket serverSocket = new ServerSocket(port)) {
             while(running) {
                 Socket socket = serverSocket.accept();
-                System.out.println(STR."[CONN] Accepted connection from \{socket.getInetAddress()}");
+                System.out.println("[CONN] Accepted connection from "+socket.getInetAddress());
                 new AgentThread(socket,this);
             }
         }

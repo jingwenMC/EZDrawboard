@@ -29,10 +29,10 @@ public abstract class Router {
             try {
                 magic = dataInputStream.readInt();
             } catch (EOFException e) {
-                System.out.println(STR."[EOF] EOF from \{socket.getInetAddress()}");
+                System.out.println("[EOF] EOF from "+socket.getInetAddress());
                 break;
             } catch (SocketException e) {
-                System.out.println(STR."[SDC] Socket disconnect from \{socket.getInetAddress()}");
+                System.out.println("[SDC] Socket disconnect from "+socket.getInetAddress());
                 break;
             }
             if (magic == 0x10311101) {
@@ -40,14 +40,14 @@ public abstract class Router {
                 Packet packet = packets.get(packetName);
                 if(packet != null) {
                     if((packet instanceof ServerContextualPacket serverContextualPacket) && (packet instanceof Authenticated)) {
-                        if(serverContextualPacket.getAgent().getUserInfo()==null)throw new IllegalStateException();
+                        if(serverContextualPacket.getAgent()!=null&&serverContextualPacket.getAgent().getUserInfo()==null)throw new IllegalStateException();
                     }
                     packet.handlePacketIn(dataOutputStream, dataInputStream);
                 }
             }
         }
         if(!socket.isClosed()) socket.close();
-        System.out.println(STR."[CLOS] Closed connection from \{socket.getInetAddress()}");
+        System.out.println("[CLOS] Closed connection from "+socket.getInetAddress());
     }
 
     public DataOutputStream getDataOutputStream() {

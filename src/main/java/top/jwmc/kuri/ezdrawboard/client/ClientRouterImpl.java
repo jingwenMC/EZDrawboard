@@ -1,9 +1,13 @@
 package top.jwmc.kuri.ezdrawboard.client;
 
+import top.jwmc.kuri.ezdrawboard.data.Message;
 import top.jwmc.kuri.ezdrawboard.networking.Packet;
 import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutLogin;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutRegister;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketChat;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketDrawFreehand;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketOutJoin;
 import top.jwmc.kuri.ezdrawboard.networking.board.PacketOutList;
 
 import java.io.IOException;
@@ -24,5 +28,11 @@ public class ClientRouterImpl extends Router {
         packets.put(packetOutRegister.getName(), packetOutRegister);
         PacketOutList packetOutList = new PacketOutList(null);
         packets.put(packetOutList.getName(), packetOutList);
+        PacketOutJoin packetOutJoin = new PacketOutJoin();
+        packets.put(packetOutJoin.getName(), packetOutJoin);
+        PacketChat packetChat = new PacketChat();
+        packets.put(packetChat.getName(), packetChat);
+        PacketDrawFreehand packetDrawFreehand = new PacketDrawFreehand(null);
+        packets.put(packetDrawFreehand.getName(), packetDrawFreehand);
     }
 }

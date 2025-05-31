@@ -83,7 +83,7 @@ public class Talk extends Application {
 
         //Sync
         for(Message message : chatMessages) {
-            createMessageBubble(message.time(),message.user(),message.content(),message.user().equals(Mainapp.user.name()));
+            Platform.runLater(()->createMessageBubble(message.time(),message.user(),message.content(),message.user().equals(Mainapp.user.name())));
         }
     }
 
