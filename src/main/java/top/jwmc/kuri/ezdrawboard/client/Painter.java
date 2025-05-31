@@ -23,6 +23,7 @@ public class Painter {
         this.gc = canvas.getGraphicsContext2D();
         clearCanvas();
         Mainapp.painter = this;
+        available = true;
     }
 
     public void setBackgroundImage(Image backgroundImage) {
