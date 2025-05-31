@@ -43,8 +43,7 @@ public class PacketDrawFreehand extends ServerContextualPacket implements Authen
         tool = EnhancedDrawingBoard.ToolType.values()[in.readInt()];
         eraserSize = in.readInt();
         if(agent==null) { //Client
-            if(Mainapp.painter.)
-            Mainapp.painter.drawFreehandPath(true, path, tool, eraserSize);
+            if(Mainapp.painter.available) Mainapp.painter.drawFreehandPath(true, path, tool, eraserSize);
         } else for(AgentThread agentThread : agent.getBoard().getUsers()) { //Server
             if(agentThread!=agent) sendPacket(agentThread.getRouter().getDataOutputStream());
         }

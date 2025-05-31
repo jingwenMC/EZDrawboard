@@ -23,10 +23,10 @@ public class OnlineBoard extends Application {
 
     private Label onlineCountLabel;
     private ListView<String> onlineUserListView;
-    public static List<String> userList = new ArrayList<>(List.of(FETCH_BOARD));
     public static final String NO_BOARD = "当前没有在线白板！";
     public static final String CREATE_BOARD = "+ > 创建白板";
     public static final String FETCH_BOARD = "正在获取……";
+    public static List<String> userList = new ArrayList<>(List.of(FETCH_BOARD));
     public static volatile boolean UPDATED = false;
     public static boolean RESULT = false;
     public static String MESSAGE = "";
