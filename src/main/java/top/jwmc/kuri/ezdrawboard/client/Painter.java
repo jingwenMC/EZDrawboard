@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Painter {
+    public boolean available = false;
     private final GraphicsContext gc;
     private final Canvas canvas;
     private Color currentColor = Color.BLACK;

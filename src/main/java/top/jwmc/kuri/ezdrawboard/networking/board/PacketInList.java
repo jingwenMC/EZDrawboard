@@ -7,7 +7,6 @@ import top.jwmc.kuri.ezdrawboard.server.AgentThread;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
 public class PacketInList extends ServerContextualPacket implements Authenticated {
 

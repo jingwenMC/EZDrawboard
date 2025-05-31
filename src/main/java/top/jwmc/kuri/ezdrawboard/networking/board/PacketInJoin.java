@@ -9,11 +9,14 @@ import top.jwmc.kuri.ezdrawboard.server.Board;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
 public class PacketInJoin extends ServerContextualPacket implements Authenticated {
     public PacketInJoin(AgentThread context) {
         super(context);
+    }
+    public PacketInJoin(String id) {
+        super(null);
+        this.id = id;
     }
     String id;
     @Override
@@ -30,11 +33,18 @@ public class PacketInJoin extends ServerContextualPacket implements Authenticate
         if(board != null) {
             getAgent().setBoard(board);
             board.getUsers().add(getAgent());
-            packet.message = "Success";
+            packet.message = "加入成功";
             packet.result = PacketOutJoin.Result.SUCCESS;
         } else {
-            packet.message = "加入失败，未找到对应的房间";
-            packet.result = PacketOutJoin.Result.FAILURE;
+            if(id.equals(user.name())) {
+                Board boardC = new Board(id,id,"",getAgent());
+                getAgent().getInstance().getBoardMap().put(id,boardC);
+                packet.message = "创建成功";
+                packet.result = PacketOutJoin.Result.SUCCESS;
+            } else {
+                packet.message = "加入失败，未找到对应的房间";
+                packet.result = PacketOutJoin.Result.FAILURE;
+            }
         }
         packet.sendPacket(out);
     }

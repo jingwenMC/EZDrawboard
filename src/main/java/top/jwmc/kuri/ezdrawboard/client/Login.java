@@ -74,6 +74,9 @@ public class Login extends Application {
         primaryStage.setTitle("登录系统");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
         primaryStage.show();
     }
 
@@ -108,9 +111,6 @@ public class Login extends Application {
             e.printStackTrace();
         }
     }
-    private boolean isValidLogin(String username, String password) {
-        return "admin".equals(username) && "123456".equals(password);
-    }
 
     /**
      * 显示提示框
@@ -123,18 +123,26 @@ public class Login extends Application {
         alert.showAndWait();
     }
 
-    public void boot(String ip, int port, Stage mainStage) throws IOException {
-        new Thread(()->{
+    public void boot(String ip, int port, Stage mainStage) {
+        Mainapp.networkThread = new Thread(()->{
             try (Socket socket = new Socket(ip, port)) {
                     Router router = new ClientRouterImpl(socket);
                     new PacketPing().sendPacket(router.getDataOutputStream());
                     Mainapp.out = router.getDataOutputStream();
                     Mainapp.ONLINE_MODE = true;
                     router.startHandleRequest();
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("网络错误");
+                        alert.setContentText("与服务器的连接丢失，现在退出程序……");
+                        alert.showAndWait();
+                        System.exit(0);
+                    });
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            }).start();
+            });
+        Mainapp.networkThread.start();
         Platform.runLater(()->start(mainStage));
     }
 }

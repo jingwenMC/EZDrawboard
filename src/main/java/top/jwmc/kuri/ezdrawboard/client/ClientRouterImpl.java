@@ -4,6 +4,7 @@ import top.jwmc.kuri.ezdrawboard.networking.Packet;
 import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutLogin;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutRegister;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketOutList;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -21,5 +22,7 @@ public class ClientRouterImpl extends Router {
         packets.put(packetOutLogin.getName(), packetOutLogin);
         PacketOutRegister packetOutRegister = new PacketOutRegister();
         packets.put(packetOutRegister.getName(), packetOutRegister);
+        PacketOutList packetOutList = new PacketOutList(null);
+        packets.put(packetOutList.getName(), packetOutList);
     }
 }

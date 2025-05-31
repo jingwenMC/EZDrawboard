@@ -16,4 +16,5 @@ public class Mainapp {
     public static DataOutputStream out;
     public static Painter painter;
     public static User user;
+    public static Thread networkThread;
 }
