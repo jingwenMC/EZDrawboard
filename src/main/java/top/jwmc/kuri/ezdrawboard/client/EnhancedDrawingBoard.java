@@ -200,6 +200,8 @@ public class EnhancedDrawingBoard extends Application {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存PNG文件");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG文件", "*.png"));
+        fileChooser.setInitialFileName(Util.FILE_NAME);
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             try {
@@ -221,7 +223,6 @@ public class EnhancedDrawingBoard extends Application {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             try {
-                // 使用Image的公共构造函数加载图像
                 backgroundImage = new Image(file.toURI().toString());
                 painter.setBackgroundImage(backgroundImage);
                 painter.redrawAll(drawings);
@@ -233,17 +234,14 @@ public class EnhancedDrawingBoard extends Application {
         }
     }
 
-    // 新增：绘制背景图像到画布
     private void redrawWithBackground() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         if (backgroundImage != null) {
             gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
         }
-        // 不自动绘制已有drawings，绘图逻辑由Painter和MouseHandler控制，保持原样
     }
 
-    // 新增：WritableImage转BufferedImage，绕过SwingFXUtils
     private BufferedImage writableImageToBufferedImage(WritableImage writableImage) {
         int width = (int) writableImage.getWidth();
         int height = (int) writableImage.getHeight();
