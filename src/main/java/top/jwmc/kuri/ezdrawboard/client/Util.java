@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class Util {
-    public static String FILE_NAME = "tmp.png";
+    public static final String FILE_NAME = "tmp.png";
     public void byteToFile(final byte[] data) {
         try (FileOutputStream fos = new FileOutputStream(FILE_NAME)) {
             fos.write(data);

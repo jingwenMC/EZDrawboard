@@ -1,6 +1,5 @@
 package top.jwmc.kuri.ezdrawboard.client;
 
-import top.jwmc.kuri.ezdrawboard.data.Message;
 import top.jwmc.kuri.ezdrawboard.networking.Packet;
 import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutLogin;
