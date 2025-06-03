@@ -192,6 +192,8 @@ public class EnhancedDrawingBoard extends Application {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存PNG文件");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG文件", "*.png"));
+        fileChooser.setInitialFileName("mypaint.png");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             try {
@@ -204,6 +206,22 @@ public class EnhancedDrawingBoard extends Application {
             }
         }
     }
+    private void saveCanvasToPNGOnline(Stage stage) {
+        WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+        canvas.snapshot(null, writableImage);
+
+        File file = new File(System.getProperty("user.dir"), Util.FILE_NAME);
+
+        try {
+            BufferedImage bufferedImage = writableImageToBufferedImage(writableImage);
+            ImageIO.write(bufferedImage, "png", file);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "保存失败: " + ex.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 
     // 新增：读取PNG作为背景图片，并显示在画布上
     private void loadBackgroundFromPNG(Stage stage) {
@@ -213,7 +231,6 @@ public class EnhancedDrawingBoard extends Application {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             try {
-                // 使用Image的公共构造函数加载图像
                 backgroundImage = new Image(file.toURI().toString());
                 painter.setBackgroundImage(backgroundImage);
                 painter.redrawAll(drawings);
@@ -224,18 +241,34 @@ public class EnhancedDrawingBoard extends Application {
             }
         }
     }
+    private void loadBackgroundFromPNGOnline(Stage stage) {
+        // 直接从程序目录加载固定文件名
+        File file = new File(System.getProperty("user.dir"), Util.FILE_NAME);
 
-    // 新增：绘制背景图像到画布
+        if (file.exists()) {
+            try {
+                backgroundImage = new Image(file.toURI().toString());
+                painter.setBackgroundImage(backgroundImage);
+                painter.redrawAll(drawings);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "加载失败: " + ex.getMessage());
+                alert.showAndWait();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "未找到背景文件: " + file.getAbsolutePath());
+            alert.showAndWait();
+        }
+    }
+
     private void redrawWithBackground() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         if (backgroundImage != null) {
             gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
         }
-        // 不自动绘制已有drawings，绘图逻辑由Painter和MouseHandler控制，保持原样
     }
 
-    // 新增：WritableImage转BufferedImage，绕过SwingFXUtils
     private BufferedImage writableImageToBufferedImage(WritableImage writableImage) {
         int width = (int) writableImage.getWidth();
         int height = (int) writableImage.getHeight();
