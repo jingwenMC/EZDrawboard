@@ -113,7 +113,6 @@ public class EnhancedDrawingBoard extends Application {
         Button saveButton = new Button("保存背景PNG");
         Button loadButton = new Button("读取PNG背景");
         Button talkButton=new Button("聊天");
-        Button boardButton=new Button("查看在线白板");
         talkButton.setOnAction(event -> {
             if(!Mainapp.ONLINE_MODE){
                 showAlert("提示", "已选择本地模式", "无法使用该功能");
@@ -122,16 +121,7 @@ public class EnhancedDrawingBoard extends Application {
             Talk talk = new Talk();
             talk.showChatWindow();}
         });
-        boardButton.setOnAction(event -> {
-            if(!Mainapp.ONLINE_MODE){
-                showAlert("提示", "已选择本地模式", "无法使用该功能");
-            }
-            else{
 
-                OnlineBoard onlineBoard = new OnlineBoard();
-                onlineBoard.showChatWindow();
-            }
-        });
         saveButton.setOnAction(e -> saveCanvasToPNG(primaryStage));
         loadButton.setOnAction(e -> loadBackgroundFromPNG(primaryStage));
 
@@ -170,7 +160,7 @@ public class EnhancedDrawingBoard extends Application {
         eraserControls.managedProperty().bind(eraser.selectedProperty());
 
 
-        HBox toolbar = new HBox(5, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton,talkButton,boardButton);
+        HBox toolbar = new HBox(5, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton,talkButton);
         BorderPane root = new BorderPane();
         root.setTop(toolbar);
         root.setCenter(canvas);

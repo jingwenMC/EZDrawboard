@@ -31,7 +31,7 @@ public class OnlineBoard extends Application {
     public static volatile boolean UPDATED = false;
     public static boolean RESULT = false;
     public static String MESSAGE = "";
-
+    private Stage primaryStage;
     public static void main(String[] args) {
         launch(args);
     }
@@ -39,7 +39,7 @@ public class OnlineBoard extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("在线白板列表");
-
+        this.primaryStage = primaryStage;
         onlineCountLabel = new Label("当前在线人数: 获取中...");
         onlineCountLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #333;");
 
@@ -140,6 +140,7 @@ public class OnlineBoard extends Application {
             EnhancedDrawingBoard printApp = new EnhancedDrawingBoard();
             Stage printStage = new Stage();
             printApp.start(printStage);
+            primaryStage.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
