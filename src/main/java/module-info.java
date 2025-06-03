@@ -4,6 +4,7 @@ module top.jwmc.kuri.ezdrawboard {
     requires org.controlsfx.controls;
     requires org.jetbrains.annotations;
     requires java.desktop;
+    requires java.sql;
     exports top.jwmc.kuri.ezdrawboard.client;
     exports top.jwmc.kuri.ezdrawboard.server;
     exports top.jwmc.kuri.ezdrawboard.networking;

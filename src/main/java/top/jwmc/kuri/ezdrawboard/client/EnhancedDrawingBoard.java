@@ -26,20 +26,6 @@ import java.awt.image.BufferedImage;
 public class EnhancedDrawingBoard extends Application {
     public enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER }
 
-//    public enum EraserMode{
-//        LINE("线擦除");
-//
-//        private final String displayName;
-//
-//        EraserMode(String displayName) {
-//            this.displayName = displayName;
-//        }
-//        @Override
-//        public String toString(){
-//            return displayName;
-//        }
-//    }
-
     public static class Drawing {
         ToolType type;
         Color color;
