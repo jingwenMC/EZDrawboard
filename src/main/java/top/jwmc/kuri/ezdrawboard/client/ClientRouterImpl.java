@@ -5,6 +5,8 @@ import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutLogin;
 import top.jwmc.kuri.ezdrawboard.networking.auth.PacketOutRegister;
 import top.jwmc.kuri.ezdrawboard.networking.board.*;
+import top.jwmc.kuri.ezdrawboard.networking.util.PacketBoardTerminate;
+import top.jwmc.kuri.ezdrawboard.server.AgentThread;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -32,5 +34,11 @@ public class ClientRouterImpl extends Router {
         packets.put(packetDrawFreehand.getName(), packetDrawFreehand);
         PacketOutOnline packetOutOnline = new PacketOutOnline(null);
         packets.put(packetOutOnline.getName(), packetOutOnline);
+        PacketImageDeliver packetImageDeliver = new PacketImageDeliver(new byte[]{});
+        packets.put(packetImageDeliver.getName(), packetImageDeliver);
+        PacketImageRequest packetImageRequest = new PacketImageRequest((AgentThread) null);
+        packets.put(packetImageRequest.getName(), packetImageRequest);
+        PacketBoardTerminate packetBoardTerminate = new PacketBoardTerminate(null);
+        packets.put(packetBoardTerminate.getName(), packetBoardTerminate);
     }
 }

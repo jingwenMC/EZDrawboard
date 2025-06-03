@@ -35,6 +35,7 @@ public class PacketInJoin extends ServerContextualPacket implements Authenticate
             board.getUsers().add(getAgent());
             packet.message = "加入成功";
             packet.result = PacketOutJoin.Result.SUCCESS;
+            new PacketImageRequest(user.name()).sendPacket(board.getOwner().getRouter().getDataOutputStream());
         } else {
             if(id.equals(user.name())) {
                 Board boardC = new Board(id,id,"",getAgent());

@@ -7,7 +7,7 @@ import java.nio.file.Files;
 
 public class Util {
     public static final String FILE_NAME = "tmp.png";
-    public void byteToFile(final byte[] data) {
+    public static void byteToFile(final byte[] data) {
         try (FileOutputStream fos = new FileOutputStream(FILE_NAME)) {
             fos.write(data);
         } catch (IOException e) {
@@ -15,9 +15,12 @@ public class Util {
         }
     }
 
-    public byte[] fileToByte() {
+    public static byte[] fileToByte() {
+        return fileToByte(new File(FILE_NAME));
+    }
+
+    public static byte[] fileToByte(File file) {
         try {
-            File file = new File(FILE_NAME);
             return Files.readAllBytes(file.toPath());
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,5 +1,7 @@
 package top.jwmc.kuri.ezdrawboard.networking.board;
 
+import top.jwmc.kuri.ezdrawboard.client.EnhancedDrawingBoard;
+import top.jwmc.kuri.ezdrawboard.client.Util;
 import top.jwmc.kuri.ezdrawboard.networking.ServerContextualPacket;
 import top.jwmc.kuri.ezdrawboard.server.AgentThread;
 import top.jwmc.kuri.ezdrawboard.server.Board;
@@ -56,7 +58,11 @@ public class PacketImageDeliver extends ServerContextualPacket {
                 }
             }
         } else {
-
+            Util.byteToFile(image);
+            while (EnhancedDrawingBoard.preparing()) {
+                Thread.onSpinWait();
+            }
+            EnhancedDrawingBoard.loadCanvas();
         }
     }
 

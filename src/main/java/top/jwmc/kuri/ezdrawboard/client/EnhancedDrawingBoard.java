@@ -1,5 +1,6 @@
 package top.jwmc.kuri.ezdrawboard.client;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -10,6 +11,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +21,16 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelReader;
 import javafx.stage.FileChooser;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketImageDeliver;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketImageRequest;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.image.BufferedImage;
 
 public class EnhancedDrawingBoard extends Application {
+    private static Stage PRIMARY_STAGE;
+    private static EnhancedDrawingBoard INSTANCE;
     public enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER }
 
     public enum EraserMode{
@@ -88,6 +95,7 @@ public class EnhancedDrawingBoard extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        INSTANCE = this;
         canvas = new Canvas(800, 550);
         painter = new Painter(canvas);
         mouseHandler = new MouseHandler(drawings, currentTool, painter, this);
@@ -122,6 +130,7 @@ public class EnhancedDrawingBoard extends Application {
             talk.showChatWindow();}
         });
 
+        PRIMARY_STAGE = primaryStage;
         saveButton.setOnAction(e -> saveCanvasToPNG(primaryStage));
         loadButton.setOnAction(e -> loadBackgroundFromPNG(primaryStage));
 
@@ -214,11 +223,17 @@ public class EnhancedDrawingBoard extends Application {
             }
         }
     }
+    public static void saveCanvas() {
+        Platform.runLater(()-> {
+            INSTANCE.saveCanvasToPNGOnline(PRIMARY_STAGE);
+            PacketImageRequest.UPDATED = true;
+        });
+    }
     private void saveCanvasToPNGOnline(Stage stage) {
         WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
         canvas.snapshot(null, writableImage);
 
-        File file = new File(System.getProperty("user.dir"), Util.FILE_NAME);
+        File file = new File(Util.FILE_NAME);
 
         try {
             BufferedImage bufferedImage = writableImageToBufferedImage(writableImage);
@@ -242,6 +257,7 @@ public class EnhancedDrawingBoard extends Application {
                 backgroundImage = new Image(file.toURI().toString());
                 painter.setBackgroundImage(backgroundImage);
                 painter.redrawAll(drawings);
+                if(Mainapp.ONLINE_MODE)new PacketImageDeliver(Util.fileToByte(file)).sendPacket(Mainapp.out);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR, "加载失败: " + ex.getMessage());
@@ -249,9 +265,16 @@ public class EnhancedDrawingBoard extends Application {
             }
         }
     }
+    public static void loadCanvas() {
+        File file = new File(Util.FILE_NAME);
+        while (!file.exists()) {
+            Thread.onSpinWait();
+        }
+        Platform.runLater(()->INSTANCE.loadBackgroundFromPNGOnline(PRIMARY_STAGE));
+    }
     private void loadBackgroundFromPNGOnline(Stage stage) {
         // 直接从程序目录加载固定文件名
-        File file = new File(System.getProperty("user.dir"), Util.FILE_NAME);
+        File file = new File(Util.FILE_NAME);
 
         if (file.exists()) {
             try {
@@ -304,6 +327,10 @@ public class EnhancedDrawingBoard extends Application {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    public static boolean preparing() {
+        return INSTANCE == null;
     }
 }
 

@@ -36,5 +36,9 @@ public class ServerRouterImpl extends Router {
         packets.put(packetDrawFreehand.getName(), packetDrawFreehand);
         PacketInOnline packetInOnline = new PacketInOnline(agent);
         packets.put(packetInOnline.getName(), packetInOnline);
+        PacketImageDeliver packetImageDeliver = new PacketImageDeliver(agent);
+        packets.put(packetImageDeliver.getName(), packetImageDeliver);
+        PacketImageRequest packetImageRequest = new PacketImageRequest(agent);
+        packets.put(packetImageRequest.getName(), packetImageRequest);
     }
 }
