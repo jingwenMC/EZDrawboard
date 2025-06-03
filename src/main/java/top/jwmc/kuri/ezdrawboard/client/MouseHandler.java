@@ -32,8 +32,7 @@ public class MouseHandler {
         currentPath.add(new Point2D(startX, startY));
 
         //橡皮擦点擦除
-        if (currentTool[0] == EnhancedDrawingBoard.ToolType.ERASER &&
-                board.getCurrentEraserMode() == EnhancedDrawingBoard.EraserMode.PIXEL) {
+        if (currentTool[0] == EnhancedDrawingBoard.ToolType.ERASER) {
             painter.eraseAtPoint(startX, startY, board.getEraserSize());
         }
     }
@@ -48,16 +47,9 @@ public class MouseHandler {
 //                currentPath.add(new Point2D(endX, endY));
 //                painter.redrawAll(drawings);
 //                painter.drawFreehandPath(currentPath, currentTool[0]);
-                if (board.getCurrentEraserMode() == EnhancedDrawingBoard.EraserMode.PIXEL) {
                     // 点擦除模式
                     currentPath.add(new Point2D(endX, endY));
                     painter.eraseAtPoint(endX, endY, board.getEraserSize());
-                } else {
-                    // 线擦除模式
-                    currentPath.add(new Point2D(endX, endY));
-                    painter.redrawAll(drawings);
-                    painter.drawFreehandPath(currentPath, currentTool[0], board.getEraserSize());
-                }
                 break;
             default:
                 painter.drawTempShape(startX, startY, endX, endY, currentTool[0],drawings);
@@ -83,16 +75,13 @@ public class MouseHandler {
             ));
         }
         else if (currentTool[0] == EnhancedDrawingBoard.ToolType.ERASER) {
-            if (board.getCurrentEraserMode() == EnhancedDrawingBoard.EraserMode.LINE) {
                 // 线擦除模式：添加橡皮擦路径到绘图列表
                 drawings.add(new EnhancedDrawingBoard.Drawing(
                         currentTool[0],
                         Color.WHITE, // 橡皮擦使用白色
                         new ArrayList<>(currentPath),
-                        board.getEraserSize(),
-                        board.getCurrentEraserMode()
+                        board.getEraserSize()
                 ));
-            }
             // 点擦除模式不需要保存到drawings，因为效果已直接绘制
         }
         else {
