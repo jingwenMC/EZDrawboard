@@ -10,4 +10,5 @@ public class Mainapp {
     public static Painter painter;
     public static User user;
     public static Thread networkThread;
+    public static EnhancedDrawingBoard drawingBoard;
 }

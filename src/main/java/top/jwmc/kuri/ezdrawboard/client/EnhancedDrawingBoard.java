@@ -26,26 +26,24 @@ import java.awt.image.BufferedImage;
 public class EnhancedDrawingBoard extends Application {
     public enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER }
 
-    public enum EraserMode{
-        PIXEL("像素点擦除"),
-        LINE("线擦除");
-
-        private final String displayName;
-
-        EraserMode(String displayName) {
-            this.displayName = displayName;
-        }
-        @Override
-        public String toString(){
-            return displayName;
-        }
-    }
+//    public enum EraserMode{
+//        LINE("线擦除");
+//
+//        private final String displayName;
+//
+//        EraserMode(String displayName) {
+//            this.displayName = displayName;
+//        }
+//        @Override
+//        public String toString(){
+//            return displayName;
+//        }
+//    }
 
     public static class Drawing {
         ToolType type;
         Color color;
         List<Point2D> path;
-        EraserMode eraserMode;
         double x1, y1, x2, y2;
         int eraserSize;     //橡皮擦大小
 
@@ -65,12 +63,11 @@ public class EnhancedDrawingBoard extends Application {
         }
 
         //橡皮擦构造方法
-        Drawing(ToolType type, Color color, List<Point2D> path, int eraserSize, EraserMode eraserMode) {
+        Drawing(ToolType type, Color color, List<Point2D> path, int eraserSize) {
             this.type = type;
             this.color = color;
             this.path = path;
             this.eraserSize = eraserSize;
-            this.eraserMode = eraserMode;
         }
     }
 
@@ -82,7 +79,6 @@ public class EnhancedDrawingBoard extends Application {
 
     // 新增成员变量：背景图像、橡皮擦相关成员变量
     private Image backgroundImage = null;
-    private EraserMode currentEraserMode = EraserMode.PIXEL;
     private int eraserSize = 5;
     private Slider eraserSizeSlider;
 
@@ -129,20 +125,18 @@ public class EnhancedDrawingBoard extends Application {
         VBox eraserControls = new VBox(5);
         eraserControls.setPadding(new Insets(5));
         eraserControls.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-radius: 5;");
-        Label eraserLabel = new Label("橡皮擦模式选择：");
-        eraserLabel.setStyle("-fx-font-weight: bold;");
 
-        //橡皮擦模式选择
-        ToggleGroup eraserModeGroup = new ToggleGroup();
-        RadioButton pixelMode = new RadioButton(EraserMode.PIXEL.toString());
-        pixelMode.setToggleGroup(eraserModeGroup);
-        pixelMode.setSelected(true);
-        pixelMode.setOnAction(e -> currentEraserMode = EraserMode.PIXEL);
-        RadioButton lineMode = new RadioButton(EraserMode.LINE.toString());
-        lineMode.setToggleGroup(eraserModeGroup);
-        lineMode.setOnAction(e -> currentEraserMode = EraserMode.LINE);
-
-        HBox eraserModeBox = new HBox(10, pixelMode, lineMode);
+//        //橡皮擦模式选择
+//        ToggleGroup eraserModeGroup = new ToggleGroup();
+//        RadioButton pixelMode = new RadioButton(EraserMode.PIXEL.toString());
+//        pixelMode.setToggleGroup(eraserModeGroup);
+//        pixelMode.setSelected(true);
+//        pixelMode.setOnAction(e -> currentEraserMode = EraserMode.PIXEL);
+//        RadioButton lineMode = new RadioButton(EraserMode.LINE.toString());
+//        lineMode.setToggleGroup(eraserModeGroup);
+//        lineMode.setOnAction(e -> currentEraserMode = EraserMode.LINE);
+//
+//        HBox eraserModeBox = new HBox(10, pixelMode, lineMode);
 
         //橡皮擦大小滑块
         Label sizeLabel = new Label("橡皮擦大小：");
@@ -155,14 +149,15 @@ public class EnhancedDrawingBoard extends Application {
             eraserSize = newVal.intValue();
         });
 
-        eraserControls.getChildren().addAll(eraserLabel, eraserModeBox, sizeLabel, eraserSizeSlider);
+        eraserControls.getChildren().addAll(sizeLabel, eraserSizeSlider);
         eraserControls.visibleProperty().bind(eraser.selectedProperty());
         eraserControls.managedProperty().bind(eraser.selectedProperty());
 
 
         HBox toolbar = new HBox(5, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton,talkButton);
         BorderPane root = new BorderPane();
-        root.setTop(toolbar);
+        VBox topContainer = new VBox(toolbar, eraserControls);
+        root.setTop(topContainer);
         root.setCenter(canvas);
 
         canvas.setOnMousePressed(mouseHandler::onMousePressed);
@@ -184,9 +179,6 @@ public class EnhancedDrawingBoard extends Application {
         return button;
     }
 
-    public EraserMode getCurrentEraserMode() {
-        return currentEraserMode;
-    }
 
     public int getEraserSize(){
         return eraserSize;
