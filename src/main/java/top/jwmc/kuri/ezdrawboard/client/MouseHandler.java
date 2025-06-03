@@ -43,6 +43,9 @@ public class MouseHandler {
 
         switch (currentTool[0]) {
             case FREEHAND:
+                currentPath.add(new Point2D(endX, endY));
+                painter.drawFreehandPath(currentPath, currentTool[0], board.getEraserSize());
+                break;
             case ERASER:
 //                currentPath.add(new Point2D(endX, endY));
 //                painter.redrawAll(drawings);
@@ -60,18 +63,12 @@ public class MouseHandler {
     public void onMouseReleased(MouseEvent e) {
         double endX = e.getX();
         double endY = e.getY();
-
-//        if (currentTool[0] == EnhancedDrawingBoard.ToolType.FREEHAND ||
-//                currentTool[0] == EnhancedDrawingBoard.ToolType.ERASER) {
-//            drawings.add(new EnhancedDrawingBoard.Drawing(currentTool[0], painter.getCurrentColor(), new ArrayList<>(currentPath)));
-//        } else {
-//            drawings.add(new EnhancedDrawingBoard.Drawing(currentTool[0], painter.getCurrentColor(), startX, startY, endX, endY));
-//        }
         if (currentTool[0] == EnhancedDrawingBoard.ToolType.FREEHAND) {
             drawings.add(new EnhancedDrawingBoard.Drawing(
                     currentTool[0],
                     painter.getCurrentColor(),
-                    new ArrayList<>(currentPath)
+                    new ArrayList<>(currentPath),
+                    board.getEraserSize()
             ));
         }
         else if (currentTool[0] == EnhancedDrawingBoard.ToolType.ERASER) {
@@ -88,7 +85,8 @@ public class MouseHandler {
             drawings.add(new EnhancedDrawingBoard.Drawing(
                     currentTool[0],
                     painter.getCurrentColor(),
-                    startX, startY, endX, endY
+                    startX, startY, endX, endY,
+                    board.getEraserSize()
             ));
         }
 

@@ -40,6 +40,16 @@ public class EnhancedDrawingBoard extends Application {
         double x1, y1, x2, y2;
         int eraserSize;     //橡皮擦大小
 
+        Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2, int eraserSize) {
+            this.type = type;
+            this.color = color;
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.eraserSize = eraserSize;
+        }
+
         Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2) {
             this.type = type;
             this.color = color;
@@ -76,7 +86,7 @@ public class EnhancedDrawingBoard extends Application {
     private Slider eraserSizeSlider;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         INSTANCE = this;
         canvas = new Canvas(800, 550);
         painter = new Painter(canvas);
@@ -134,7 +144,7 @@ public class EnhancedDrawingBoard extends Application {
 //        HBox eraserModeBox = new HBox(10, pixelMode, lineMode);
 
         //橡皮擦大小滑块
-        Label sizeLabel = new Label("橡皮擦大小：");
+        Label sizeLabel = new Label("粗细调节：");
         eraserSizeSlider = new Slider(1, 50, eraserSize);
         eraserSizeSlider.setShowTickLabels(true);
         eraserSizeSlider.setShowTickMarks(true);
@@ -145,8 +155,8 @@ public class EnhancedDrawingBoard extends Application {
         });
 
         eraserControls.getChildren().addAll(sizeLabel, eraserSizeSlider);
-        eraserControls.visibleProperty().bind(eraser.selectedProperty());
-        eraserControls.managedProperty().bind(eraser.selectedProperty());
+        //eraserControls.visibleProperty().bind(eraser.selectedProperty());
+        //eraserControls.managedProperty().bind(eraser.selectedProperty());
 
 
         HBox toolbar = new HBox(5, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton,talkButton);
@@ -165,6 +175,7 @@ public class EnhancedDrawingBoard extends Application {
             System.exit(0);
         });
         primaryStage.show();
+        if(Mainapp.ONLINE_MODE)new PacketImageRequest(Mainapp.user.name()).sendPacket(Mainapp.out);
     }
 
     private RadioButton createToolButton(String text, ToolType tool, ToggleGroup group) {

@@ -137,7 +137,7 @@ public class Painter {
             if (path.size() < 2) return;
 
             gc.setStroke(currentColor);
-            gc.setLineWidth(1);
+            gc.setLineWidth(eraserSize);
 //            gc.setStroke(tool == EnhancedDrawingBoard.ToolType.ERASER ? backgroundColor : currentColor);
 //            gc.setLineWidth(tool == EnhancedDrawingBoard.ToolType.ERASER ? eraserWidth : 1);
             gc.beginPath();

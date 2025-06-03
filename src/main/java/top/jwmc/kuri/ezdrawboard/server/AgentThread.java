@@ -21,7 +21,6 @@ public class AgentThread extends Thread {
     @Override
     public void run() {
         try {
-            //TODO:INIT
             router.startHandleRequest();
             if(!connection.isClosed())connection.close();
         }catch (Exception e) {
@@ -35,7 +34,7 @@ public class AgentThread extends Thread {
                 for(AgentThread agentThread : board.getUsers()) {
                     if(!agentThread.equals(this)) {
                         try {
-                            new PacketBoardTerminate(agentThread).sendPacket(router.getDataOutputStream());
+                            new PacketBoardTerminate(agentThread).sendPacket(agentThread.getRouter().getDataOutputStream());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
