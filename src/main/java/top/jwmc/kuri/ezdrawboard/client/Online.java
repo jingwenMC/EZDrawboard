@@ -12,6 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketInOnline;
 import top.jwmc.kuri.ezdrawboard.networking.board.PacketOutOnline;
 
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class Online extends Application {
     private List<String> getOnlineUserListFromServer() {
         UPDATED = false;
         try {
-            new PacketOutOnline(null).sendPacket(Mainapp.out);
+            new PacketInOnline(null).sendPacket(Mainapp.out);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -35,8 +35,9 @@ public class PacketOutOnline extends ServerContextualPacket {
     @Override
     public void handlePacketOut(DataOutputStream out) throws IOException {
         items = getAgent().getBoard().getUsers().size();
+        ids = new ArrayList<>();
         for(AgentThread user : getAgent().getBoard().getUsers()) {
-            ids.add(user.getName());
+            ids.add(user.getUserInfo().name());
         }
         out.writeInt(items);
         for (int i = 0; i < items; i++) {
