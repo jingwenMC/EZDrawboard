@@ -200,7 +200,7 @@ public class EnhancedDrawingBoard extends Application {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存PNG文件");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG文件", "*.png"));
-        fileChooser.setInitialFileName(Util.FILE_NAME);
+        fileChooser.setInitialFileName("mypaint.png");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
@@ -214,6 +214,22 @@ public class EnhancedDrawingBoard extends Application {
             }
         }
     }
+    private void saveCanvasToPNGOnline(Stage stage) {
+        WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+        canvas.snapshot(null, writableImage);
+
+        File file = new File(System.getProperty("user.dir"), Util.FILE_NAME);
+
+        try {
+            BufferedImage bufferedImage = writableImageToBufferedImage(writableImage);
+            ImageIO.write(bufferedImage, "png", file);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "保存失败: " + ex.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 
     // 新增：读取PNG作为背景图片，并显示在画布上
     private void loadBackgroundFromPNG(Stage stage) {
@@ -231,6 +247,25 @@ public class EnhancedDrawingBoard extends Application {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "加载失败: " + ex.getMessage());
                 alert.showAndWait();
             }
+        }
+    }
+    private void loadBackgroundFromPNGOnline(Stage stage) {
+        // 直接从程序目录加载固定文件名
+        File file = new File(System.getProperty("user.dir"), Util.FILE_NAME);
+
+        if (file.exists()) {
+            try {
+                backgroundImage = new Image(file.toURI().toString());
+                painter.setBackgroundImage(backgroundImage);
+                painter.redrawAll(drawings);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "加载失败: " + ex.getMessage());
+                alert.showAndWait();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "未找到背景文件: " + file.getAbsolutePath());
+            alert.showAndWait();
         }
     }
 
