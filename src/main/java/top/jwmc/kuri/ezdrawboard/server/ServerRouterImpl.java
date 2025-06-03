@@ -3,10 +3,7 @@ package top.jwmc.kuri.ezdrawboard.server;
 import top.jwmc.kuri.ezdrawboard.networking.Packet;
 import top.jwmc.kuri.ezdrawboard.networking.Router;
 import top.jwmc.kuri.ezdrawboard.networking.auth.*;
-import top.jwmc.kuri.ezdrawboard.networking.board.PacketChat;
-import top.jwmc.kuri.ezdrawboard.networking.board.PacketDrawFreehand;
-import top.jwmc.kuri.ezdrawboard.networking.board.PacketInJoin;
-import top.jwmc.kuri.ezdrawboard.networking.board.PacketInList;
+import top.jwmc.kuri.ezdrawboard.networking.board.*;
 import top.jwmc.kuri.ezdrawboard.networking.util.PacketPing;
 
 import java.io.IOException;
@@ -37,5 +34,7 @@ public class ServerRouterImpl extends Router {
         packets.put(packetChat.getName(), packetChat);
         PacketDrawFreehand packetDrawFreehand = new PacketDrawFreehand(agent);
         packets.put(packetDrawFreehand.getName(), packetDrawFreehand);
+        PacketInOnline packetInOnline = new PacketInOnline(agent);
+        packets.put(packetInOnline.getName(), packetInOnline);
     }
 }

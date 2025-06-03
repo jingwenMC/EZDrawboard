@@ -12,7 +12,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketInOnline;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketOutOnline;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +25,8 @@ public class Online extends Application {
 
     private Label onlineCountLabel;
     private ListView<String> onlineUserListView;
+    public static List<String> userList = new ArrayList<>();
+    public static volatile boolean UPDATED = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -63,10 +69,16 @@ public class Online extends Application {
 
     // 模拟获取在线用户昵称列表
     private List<String> getOnlineUserListFromServer() {
-        // TODO: 真实服务器请求替换这里
-        String[] sampleUsers = {"Alice", "Bob", "Charlie", "David", "Eve", "Faythe", "Grace"};
-        int count = new Random().nextInt(sampleUsers.length) + 1;
-        return Arrays.asList(Arrays.copyOf(sampleUsers, count));
+        UPDATED = false;
+        try {
+            new PacketInOnline(null).sendPacket(Mainapp.out);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        while (!UPDATED) {
+            Thread.onSpinWait();
+        }
+        return userList;
     }
     public void showChatWindow() {
         Platform.runLater(() -> {

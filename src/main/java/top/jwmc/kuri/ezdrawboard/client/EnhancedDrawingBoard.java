@@ -171,6 +171,9 @@ public class EnhancedDrawingBoard extends Application {
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("增强画板");
+        primaryStage.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
         primaryStage.show();
     }
 

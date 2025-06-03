@@ -1,14 +1,13 @@
 package top.jwmc.kuri.ezdrawboard.networking.board;
 
+import top.jwmc.kuri.ezdrawboard.client.Online;
 import top.jwmc.kuri.ezdrawboard.networking.ServerContextualPacket;
 import top.jwmc.kuri.ezdrawboard.server.AgentThread;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PacketOutOnline extends ServerContextualPacket {
     public int items;
@@ -29,14 +28,16 @@ public class PacketOutOnline extends ServerContextualPacket {
         for (int i = 0; i < items; i++) {
             ids.add(in.readUTF());
         }
-        //TODO:Client
+        Online.userList = ids;
+        Online.UPDATED = true;
     }
 
     @Override
     public void handlePacketOut(DataOutputStream out) throws IOException {
         items = getAgent().getBoard().getUsers().size();
+        ids = new ArrayList<>();
         for(AgentThread user : getAgent().getBoard().getUsers()) {
-            ids.add(user.getName());
+            ids.add(user.getUserInfo().name());
         }
         out.writeInt(items);
         for (int i = 0; i < items; i++) {
