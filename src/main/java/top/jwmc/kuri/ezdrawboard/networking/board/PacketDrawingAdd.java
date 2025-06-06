@@ -19,7 +19,7 @@ import java.util.List;
 public class PacketDrawingAdd extends ServerContextualPacket implements Authenticated {
     List<Point2D> path;
     EnhancedDrawingBoard.ToolType tool;
-    int eraserSize;
+    double brushSize;
     EnhancedDrawingBoard.ToolType type;
     Color color;
     double x1, y1, x2, y2;
@@ -30,7 +30,7 @@ public class PacketDrawingAdd extends ServerContextualPacket implements Authenti
         super(null);
         this.path = drawing.path;
         this.tool = drawing.type;
-        this.eraserSize = drawing.brushSize;
+        this.brushSize = drawing.brushSize;
         this.type = drawing.type;
         this.color = drawing.color;
         this.x1 = drawing.x1;
@@ -52,7 +52,7 @@ public class PacketDrawingAdd extends ServerContextualPacket implements Authenti
             path.add(new Point2D(in.readDouble(), in.readDouble()));
         }
         tool = EnhancedDrawingBoard.ToolType.values()[in.readInt()];
-        eraserSize = in.readInt();
+        brushSize = in.readDouble();
         type = EnhancedDrawingBoard.ToolType.values()[in.readInt()];
         color = Color.valueOf(in.readUTF());
         x1 = in.readDouble();
@@ -61,7 +61,7 @@ public class PacketDrawingAdd extends ServerContextualPacket implements Authenti
         y2 = in.readDouble();
         if(agent==null) {
             if(DrawingList.INSTANCE !=null && DrawingList.INSTANCE.available)
-                DrawingList.INSTANCE.add(true,new EnhancedDrawingBoard.Drawing(type,color,path,x1,y1,x2,y2,eraserSize));
+                DrawingList.INSTANCE.add(true,new EnhancedDrawingBoard.Drawing(type,color,path,x1,y1,x2,y2,brushSize));
         } else for(AgentThread agentThread : agent.getBoard().getUsers()) { //Server
             if(agentThread!=agent) sendPacket(agentThread.getRouter().getDataOutputStream());
         }
@@ -75,7 +75,7 @@ public class PacketDrawingAdd extends ServerContextualPacket implements Authenti
             out.writeDouble(point.getY());
         }
         out.writeInt(tool.ordinal());
-        out.writeInt(eraserSize);
+        out.writeInt(brushSize);
         out.writeInt(type.ordinal());
         out.writeUTF(color.toString());
         out.writeDouble(x1);
