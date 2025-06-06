@@ -39,18 +39,18 @@ public class EnhancedDrawingBoard extends Application {
         public Color color;
         public List<Point2D> path;
         public double x1, y1, x2, y2;
-        public int eraserSize;     //橡皮擦大小
+        public double brushSize;     //橡皮擦大小
 
-        Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2, int eraserSize) {
+        Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2, double brushSize) {
             this.type = type;
             this.color = color;
             this.x1 = x1;
             this.y1 = y1;
             this.x2 = x2;
             this.y2 = y2;
-            this.eraserSize = eraserSize;
+            this.brushSize = brushSize;
         }
-        public Drawing(ToolType type, Color color,List<Point2D> path, double x1, double y1, double x2, double y2, int eraserSize) {
+        public Drawing(ToolType type, Color color,List<Point2D> path, double x1, double y1, double x2, double y2, int brushSize) {
             this.type = type;
             this.color = color;
             this.path = path;
@@ -58,30 +58,30 @@ public class EnhancedDrawingBoard extends Application {
             this.y1 = y1;
             this.x2 = x2;
             this.y2 = y2;
-            this.eraserSize = eraserSize;
+            this.brushSize = brushSize;
         }
 
-        Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2) {
-            this.type = type;
-            this.color = color;
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
-        }
+//        Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2) {
+//            this.type = type;
+//            this.color = color;
+//            this.x1 = x1;
+//            this.y1 = y1;
+//            this.x2 = x2;
+//            this.y2 = y2;
+//        }
 
-        Drawing(ToolType type, Color color, List<Point2D> path) {
-            this.type = type;
-            this.color = color;
-            this.path = path;
-        }
+//        Drawing(ToolType type, Color color, List<Point2D> path) {
+//            this.type = type;
+//            this.color = color;
+//            this.path = path;
+//        }
 
         //橡皮擦构造方法
-        Drawing(ToolType type, Color color, List<Point2D> path, int eraserSize) {
+        Drawing(ToolType type, Color color, List<Point2D> path, double brushSize) {
             this.type = type;
             this.color = color;
             this.path = path;
-            this.eraserSize = eraserSize;
+            this.brushSize = brushSize;
         }
     }
 
@@ -93,8 +93,7 @@ public class EnhancedDrawingBoard extends Application {
 
     // 新增成员变量：背景图像、橡皮擦相关成员变量
     private Image backgroundImage = null;
-    private int eraserSize = 5;
-    private Slider eraserSizeSlider;
+    private Slider sizeSlider;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -145,41 +144,24 @@ public class EnhancedDrawingBoard extends Application {
         loadButton.setOnAction(e -> loadBackgroundFromPNG(primaryStage));
 
         //橡皮擦模式控件
-        VBox eraserControls = new VBox(5);
-        eraserControls.setPadding(new Insets(5));
-        eraserControls.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-radius: 5;");
+        VBox brushSizeControls = new VBox(5);
+        brushSizeControls.setPadding(new Insets(5));
+        brushSizeControls.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-radius: 5;");
 
-//        //橡皮擦模式选择
-//        ToggleGroup eraserModeGroup = new ToggleGroup();
-//        RadioButton pixelMode = new RadioButton(EraserMode.PIXEL.toString());
-//        pixelMode.setToggleGroup(eraserModeGroup);
-//        pixelMode.setSelected(true);
-//        pixelMode.setOnAction(e -> currentEraserMode = EraserMode.PIXEL);
-//        RadioButton lineMode = new RadioButton(EraserMode.LINE.toString());
-//        lineMode.setToggleGroup(eraserModeGroup);
-//        lineMode.setOnAction(e -> currentEraserMode = EraserMode.LINE);
-//
-//        HBox eraserModeBox = new HBox(10, pixelMode, lineMode);
 
-        //橡皮擦大小滑块
+        //必刷大小滑块
         Label sizeLabel = new Label("粗细调节：");
-        eraserSizeSlider = new Slider(1, 50, eraserSize);
-        eraserSizeSlider.setShowTickLabels(true);
-        eraserSizeSlider.setShowTickMarks(true);
-        eraserSizeSlider.setMajorTickUnit(10);
-        eraserSizeSlider.setMinorTickCount(5);
-        eraserSizeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            eraserSize = newVal.intValue();
-        });
-
-        eraserControls.getChildren().addAll(sizeLabel, eraserSizeSlider);
-        //eraserControls.visibleProperty().bind(eraser.selectedProperty());
-        //eraserControls.managedProperty().bind(eraser.selectedProperty());
+        sizeSlider = new Slider(1, 50, 5);
+        sizeSlider.setShowTickLabels(true);
+        sizeSlider.setShowTickMarks(true);
+        sizeSlider.setMajorTickUnit(10);
+        sizeSlider.setMinorTickCount(5);
+        brushSizeControls.getChildren().addAll(sizeLabel, sizeSlider);
 
 
         HBox toolbar = new HBox(5, colorPicker, line, rect, ellipse, freehand, eraser, clearButton, saveButton, loadButton,talkButton);
         BorderPane root = new BorderPane();
-        VBox topContainer = new VBox(toolbar, eraserControls);
+        VBox topContainer = new VBox(toolbar, brushSizeControls);
         root.setTop(topContainer);
         root.setCenter(canvas);
 
@@ -204,8 +186,8 @@ public class EnhancedDrawingBoard extends Application {
     }
 
 
-    public int getEraserSize(){
-        return eraserSize;
+    public int getBrushSize(){
+        return (int) Math.round(sizeSlider.getValue());
     }
 
     // 新增：保存当前画布为PNG文件（包含当前绘制内容）
