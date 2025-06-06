@@ -75,7 +75,7 @@ public class PacketDrawingAdd extends ServerContextualPacket implements Authenti
             out.writeDouble(point.getY());
         }
         out.writeInt(tool.ordinal());
-        out.writeInt(brushSize);
+        out.writeDouble(brushSize);
         out.writeInt(type.ordinal());
         out.writeUTF(color.toString());
         out.writeDouble(x1);
