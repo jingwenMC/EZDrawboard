@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketDrawTempShape;
 
 import java.io.IOException;
 import java.util.List;
@@ -57,13 +58,28 @@ public class Painter {
         DrawingList.INSTANCE.clear();
         redrawBackground();
     }
-
     public void drawTempShape(
             double x1, double y1, double x2, double y2,
             EnhancedDrawingBoard.ToolType tool,
             List<EnhancedDrawingBoard.Drawing> drawings, // 传入已有图形
             double brushSize
     ) {
+        drawTempShape(false, x1, y1, x2, y2, tool, drawings, brushSize);
+    }
+
+    public void drawTempShape(boolean receive,
+            double x1, double y1, double x2, double y2,
+            EnhancedDrawingBoard.ToolType tool,
+            List<EnhancedDrawingBoard.Drawing> drawings, // 传入已有图形
+            double brushSize
+    ) {
+        if(!receive) {
+            try {
+                if(Mainapp.ONLINE_MODE)new PacketDrawTempShape(x1,y1,x2,y2,brushSize,tool).sendPacket(Mainapp.out);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         clearCanvas();
         redrawAll(drawings); //先重绘已有内容
 
