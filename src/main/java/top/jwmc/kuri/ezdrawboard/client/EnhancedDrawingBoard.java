@@ -21,6 +21,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelReader;
 import javafx.stage.FileChooser;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketDrawClear;
 import top.jwmc.kuri.ezdrawboard.networking.board.PacketImageDeliver;
 import top.jwmc.kuri.ezdrawboard.networking.board.PacketImageRequest;
 
@@ -34,15 +35,25 @@ public class EnhancedDrawingBoard extends Application {
     public enum ToolType { LINE, RECTANGLE, ELLIPSE, FREEHAND, ERASER }
 
     public static class Drawing {
-        ToolType type;
-        Color color;
-        List<Point2D> path;
-        double x1, y1, x2, y2;
-        int eraserSize;     //橡皮擦大小
+        public ToolType type;
+        public Color color;
+        public List<Point2D> path;
+        public double x1, y1, x2, y2;
+        public int eraserSize;     //橡皮擦大小
 
         Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2, int eraserSize) {
             this.type = type;
             this.color = color;
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.eraserSize = eraserSize;
+        }
+        public Drawing(ToolType type, Color color,List<Point2D> path, double x1, double y1, double x2, double y2, int eraserSize) {
+            this.type = type;
+            this.color = color;
+            this.path = path;
             this.x1 = x1;
             this.y1 = y1;
             this.x2 = x2;
@@ -75,7 +86,7 @@ public class EnhancedDrawingBoard extends Application {
     }
 
     private ToolType[] currentTool = {ToolType.LINE};
-    private final List<Drawing> drawings = new ArrayList<>();
+    private final List<Drawing> drawings = new DrawingList();
     private Canvas canvas;
     private Painter painter;
     private MouseHandler mouseHandler;
@@ -107,6 +118,13 @@ public class EnhancedDrawingBoard extends Application {
         clearButton.setOnAction(e -> {
             drawings.clear(); // 清空所有绘制的图形
             painter.clearBackgroundImage(); // 移除背景并恢复白色画布
+            if(Mainapp.ONLINE_MODE) {
+                try {
+                    new PacketDrawClear(null).sendPacket(Mainapp.out);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         });
 
         // 新增保存和读取PNG按钮

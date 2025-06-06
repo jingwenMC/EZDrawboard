@@ -7,7 +7,6 @@ import java.io.DataOutputStream;
 public class Mainapp {
     public static boolean ONLINE_MODE = false;
     public static DataOutputStream out;
-    public static Painter painter;
     public static User user;
     public static Thread networkThread;
     public static EnhancedDrawingBoard drawingBoard;

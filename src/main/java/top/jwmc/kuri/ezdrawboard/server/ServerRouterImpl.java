@@ -32,13 +32,15 @@ public class ServerRouterImpl extends Router {
         packets.put(packetInJoin.getName(), packetInJoin);
         PacketChat packetChat = new PacketChat(agent);
         packets.put(packetChat.getName(), packetChat);
-        PacketDrawFreehand packetDrawFreehand = new PacketDrawFreehand(agent);
-        packets.put(packetDrawFreehand.getName(), packetDrawFreehand);
+        PacketDrawingAdd packetDrawingAdd = new PacketDrawingAdd(agent);
+        packets.put(packetDrawingAdd.getName(), packetDrawingAdd);
         PacketInOnline packetInOnline = new PacketInOnline(agent);
         packets.put(packetInOnline.getName(), packetInOnline);
         PacketImageDeliver packetImageDeliver = new PacketImageDeliver(agent);
         packets.put(packetImageDeliver.getName(), packetImageDeliver);
         PacketImageRequest packetImageRequest = new PacketImageRequest(agent);
         packets.put(packetImageRequest.getName(), packetImageRequest);
+        PacketDrawClear packetDrawClear = new PacketDrawClear(agent);
+        packets.put(packetDrawClear.getName(), packetDrawClear);
     }
 }

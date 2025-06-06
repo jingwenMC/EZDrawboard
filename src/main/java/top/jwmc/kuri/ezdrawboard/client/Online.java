@@ -27,6 +27,7 @@ public class Online extends Application {
     private ListView<String> onlineUserListView;
     public static List<String> userList = new ArrayList<>();
     public static volatile boolean UPDATED = false;
+    Timeline timeline;
 
     public static void main(String[] args) {
         launch(args);
@@ -47,13 +48,16 @@ public class Online extends Application {
 
         Scene scene = new Scene(root, 300, 400);
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(event -> {
+            timeline.stop();
+        });
         primaryStage.show();
 
         startAutoRefresh();
     }
 
     private void startAutoRefresh() {
-        Timeline timeline = new Timeline(
+        timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0), e -> refreshOnlineUserList()),
                 new KeyFrame(Duration.seconds(5))
         );

@@ -30,8 +30,8 @@ public class ClientRouterImpl extends Router {
         packets.put(packetOutJoin.getName(), packetOutJoin);
         PacketChat packetChat = new PacketChat();
         packets.put(packetChat.getName(), packetChat);
-        PacketDrawFreehand packetDrawFreehand = new PacketDrawFreehand(null);
-        packets.put(packetDrawFreehand.getName(), packetDrawFreehand);
+        PacketDrawingAdd packetDrawingAdd = new PacketDrawingAdd((AgentThread) null);
+        packets.put(packetDrawingAdd.getName(), packetDrawingAdd);
         PacketOutOnline packetOutOnline = new PacketOutOnline(null);
         packets.put(packetOutOnline.getName(), packetOutOnline);
         PacketImageDeliver packetImageDeliver = new PacketImageDeliver(new byte[]{});
@@ -40,5 +40,7 @@ public class ClientRouterImpl extends Router {
         packets.put(packetImageRequest.getName(), packetImageRequest);
         PacketBoardTerminate packetBoardTerminate = new PacketBoardTerminate(null);
         packets.put(packetBoardTerminate.getName(), packetBoardTerminate);
+        PacketDrawClear packetDrawClear = new PacketDrawClear(null);
+        packets.put(packetDrawClear.getName(), packetDrawClear);
     }
 }

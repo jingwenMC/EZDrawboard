@@ -32,6 +32,7 @@ public class OnlineBoard extends Application {
     public static boolean RESULT = false;
     public static String MESSAGE = "";
     private Stage primaryStage;
+    Timeline timeline;
     public static void main(String[] args) {
         launch(args);
     }
@@ -69,7 +70,7 @@ public class OnlineBoard extends Application {
     }
 
     private void startAutoRefresh() {
-        Timeline timeline = new Timeline(
+         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0), e -> {
                     try {
                         refreshOnlineUserList();
@@ -123,6 +124,7 @@ public class OnlineBoard extends Application {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText(MESSAGE);
                 alert.showAndWait();
+                timeline.stop();
                 openPrintWindow();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);

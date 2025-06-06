@@ -1,9 +1,11 @@
 package top.jwmc.kuri.ezdrawboard.networking.board;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
+import top.jwmc.kuri.ezdrawboard.client.DrawingList;
 import top.jwmc.kuri.ezdrawboard.client.EnhancedDrawingBoard;
 import top.jwmc.kuri.ezdrawboard.client.Mainapp;
-import top.jwmc.kuri.ezdrawboard.client.Painter;
+import top.jwmc.kuri.ezdrawboard.client.MouseHandler;
 import top.jwmc.kuri.ezdrawboard.networking.Authenticated;
 import top.jwmc.kuri.ezdrawboard.networking.ServerContextualPacket;
 import top.jwmc.kuri.ezdrawboard.server.AgentThread;
@@ -14,23 +16,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PacketDrawFreehand extends ServerContextualPacket implements Authenticated {
+public class PacketDrawingAdd extends ServerContextualPacket implements Authenticated {
     List<Point2D> path;
     EnhancedDrawingBoard.ToolType tool;
     int eraserSize;
-    public PacketDrawFreehand(AgentThread agent) {
+    EnhancedDrawingBoard.ToolType type;
+    Color color;
+    double x1, y1, x2, y2;
+    public PacketDrawingAdd(AgentThread agent) {
         super(agent);
     }
-    public PacketDrawFreehand(List<Point2D> path, EnhancedDrawingBoard.ToolType tool, int eraserSize) {
+    public PacketDrawingAdd(EnhancedDrawingBoard.Drawing drawing) {
         super(null);
-        this.path = path;
-        this.tool = tool;
-        this.eraserSize = eraserSize;
+        this.path = drawing.path;
+        this.tool = drawing.type;
+        this.eraserSize = drawing.eraserSize;
+        this.type = drawing.type;
+        this.color = drawing.color;
+        this.x1 = drawing.x1;
+        this.y1 = drawing.y1;
+        this.x2 = drawing.x2;
+        this.y2 = drawing.y2;
     }
 
     @Override
     public String getName() {
-        return "PacketDrawFreehand";
+        return "PacketDrawingAdd";
     }
 
     @Override
@@ -42,8 +53,15 @@ public class PacketDrawFreehand extends ServerContextualPacket implements Authen
         }
         tool = EnhancedDrawingBoard.ToolType.values()[in.readInt()];
         eraserSize = in.readInt();
-        if(agent==null) { //Client
-            if(Mainapp.painter.available) Mainapp.painter.drawFreehandPath(true, path, tool, eraserSize);
+        type = EnhancedDrawingBoard.ToolType.values()[in.readInt()];
+        color = Color.valueOf(in.readUTF());
+        x1 = in.readDouble();
+        y1 = in.readDouble();
+        x2 = in.readDouble();
+        y2 = in.readDouble();
+        if(agent==null) {
+            if(DrawingList.INSTANCE !=null && DrawingList.INSTANCE.available)
+                DrawingList.INSTANCE.add(true,new EnhancedDrawingBoard.Drawing(type,color,path,x1,y1,x2,y2,eraserSize));
         } else for(AgentThread agentThread : agent.getBoard().getUsers()) { //Server
             if(agentThread!=agent) sendPacket(agentThread.getRouter().getDataOutputStream());
         }
@@ -51,12 +69,18 @@ public class PacketDrawFreehand extends ServerContextualPacket implements Authen
 
     @Override
     public void handlePacketOut(DataOutputStream out) throws IOException {
-        out.writeInt(path.size());
-        for (Point2D point : path) {
+        out.writeInt(path==null?0:path.size());
+        if(path!=null) for (Point2D point : path) {
             out.writeDouble(point.getX());
             out.writeDouble(point.getY());
         }
         out.writeInt(tool.ordinal());
         out.writeInt(eraserSize);
+        out.writeInt(type.ordinal());
+        out.writeUTF(color.toString());
+        out.writeDouble(x1);
+        out.writeDouble(y1);
+        out.writeDouble(x2);
+        out.writeDouble(y2);
     }
 }

@@ -4,26 +4,25 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
-import top.jwmc.kuri.ezdrawboard.networking.board.PacketDrawFreehand;
 
 import java.io.IOException;
 import java.util.List;
 
 public class Painter {
-    public boolean available = false;
     private final GraphicsContext gc;
     private final Canvas canvas;
     private Color currentColor = Color.BLACK;
     private final Color backgroundColor = Color.WHITE;
     private final double eraserWidth = 20;
     private Image backgroundImage;
+    public static Painter INSTANCE;
 
     public Painter(Canvas canvas) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
         clearCanvas();
-        Mainapp.painter = this;
-        available = true;
+        DrawingList.INSTANCE.available = true;
+        INSTANCE = this;
     }
 
     public void setBackgroundImage(Image backgroundImage) {
@@ -38,13 +37,8 @@ public class Painter {
 
     public void redrawBackground() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        if (backgroundImage != null) {
-            // 直接使用 backgroundImage，不需要转换
-            gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
-        } else {
-            gc.setFill(backgroundColor);
-            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        }
+        gc.setFill(backgroundColor);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     public void setCurrentColor(Color color) {
@@ -56,6 +50,11 @@ public class Painter {
     }
 
     public void clearCanvas() {
+        redrawBackground();
+    }
+
+    public void clearCanvasOnline() {
+        DrawingList.INSTANCE.clear();
         redrawBackground();
     }
 
@@ -78,44 +77,7 @@ public class Painter {
     }
 
     public void drawFreehandPath(List<Point2D> path, EnhancedDrawingBoard.ToolType tool, int eraserSize) {
-        drawFreehandPath(false, path, tool, eraserSize);
-//        if (path.isEmpty()) return;
-//
-//        if (tool == EnhancedDrawingBoard.ToolType.ERASER) {
-//            gc.setFill(backgroundColor);
-//            for (Point2D point : path) {
-//                gc.fillOval(point.getX() - eraserSize/2.0, point.getY() - eraserSize/2.0, eraserSize, eraserSize);
-//            }
-//        }else{
-//            if (path.size() < 2)    return;
-//
-//            gc.setStroke(currentColor);
-//            gc.setLineWidth(1);
-//            gc.beginPath();
-//            gc.moveTo(path.get(0).getX(), path.get(0).getY());
-//
-//            for (int i=1;i<path.size()-1;i++){
-//                Point2D point = path.get(i);
-//                gc.lineTo(point.getX(), point.getY());
-//            }
-//
-//            gc.stroke();
-//            gc.closePath();
-//        }
-    }
-
-
-    public void drawFreehandPath(boolean receive, List<Point2D> path, EnhancedDrawingBoard.ToolType tool, int eraserSize) {
-        if(!receive) {
-            if(Mainapp.ONLINE_MODE) {
-                try {
-                    new PacketDrawFreehand(path, tool, eraserSize).sendPacket(Mainapp.out);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        if (path.isEmpty()) return;
+        if (path==null||path.isEmpty()) return;
 
         if (tool == EnhancedDrawingBoard.ToolType.ERASER) {
             gc.setFill(backgroundColor);
@@ -169,14 +131,6 @@ public class Painter {
                 gc.setLineWidth(1);
                 drawFreehandPath(drawing.path, drawing.type, 0);
             }
-//            else {
-//                gc.setLineWidth(1);
-//                switch (drawing.type) {
-//                    case LINE -> gc.strokeLine(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-//                    case RECTANGLE -> drawRectangle(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-//                    case ELLIPSE -> drawEllipse(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-//                }
-//            }
             else if (drawing.type == EnhancedDrawingBoard.ToolType.ERASER) {
                 gc.setFill(backgroundColor);
                 for (Point2D point : drawing.path) {
