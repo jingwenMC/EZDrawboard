@@ -20,14 +20,14 @@ public class RegisterApp extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("注册");
 
-        // 创建表单布局
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        // 表单字段
+
         Label userNameLabel = new Label("用户名:");
         TextField userNameField = new TextField();
         grid.add(userNameLabel, 0, 0);
@@ -48,7 +48,7 @@ public class RegisterApp extends Application {
         grid.add(registerBtn, 1, 3);
         grid.add(resultLabel, 1, 4);
 
-        // 注册按钮逻辑
+
         registerBtn.setOnAction(event -> {
             String username = userNameField.getText();
             String password = passwordField.getText();
@@ -88,7 +88,7 @@ public class RegisterApp extends Application {
         primaryStage.show();
     }
 
-    // 启动应用
+
     public static void main(String[] args) {
         launch(args);
     }

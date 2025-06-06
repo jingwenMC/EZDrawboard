@@ -79,29 +79,7 @@ public class Painter {
 
     public void drawFreehandPath(List<Point2D> path, EnhancedDrawingBoard.ToolType tool, double brushSize) {
         drawFreehandPath(false, path, tool, brushSize);
-//        if (path.isEmpty()) return;
-//
-//        if (tool == EnhancedDrawingBoard.ToolType.ERASER) {
-//            gc.setFill(backgroundColor);
-//            for (Point2D point : path) {
-//                gc.fillOval(point.getX() - eraserSize/2.0, point.getY() - eraserSize/2.0, eraserSize, eraserSize);
-//            }
-//        }else{
-//            if (path.size() < 2)    return;
-//
-//            gc.setStroke(currentColor);
-//            gc.setLineWidth(1);
-//            gc.beginPath();
-//            gc.moveTo(path.get(0).getX(), path.get(0).getY());
-//
-//            for (int i=1;i<path.size()-1;i++){
-//                Point2D point = path.get(i);
-//                gc.lineTo(point.getX(), point.getY());
-//            }
-//
-//            gc.stroke();
-//            gc.closePath();
-//        }
+
     }
 
 
@@ -110,27 +88,19 @@ public class Painter {
 
         if (tool == EnhancedDrawingBoard.ToolType.ERASER) {
             gc.setFill(backgroundColor);
-//            gc.setLineWidth(eraserSize);
-//            gc.beginPath();
-//            gc.moveTo(path.get(0).getX(), path.get(0).getY());
-//            for (int i = 1; i < path.size(); i++) {
-//                Point2D point = path.get(i);
-//                gc.lineTo(point.getX(), point.getY());
-//            }
+
             for (Point2D point : path) {
                 gc.fillOval(point.getX() - brushSize / 2.0, point.getY() -
                         brushSize / 2.0, brushSize, brushSize);
             }
-//            gc.stroke();
-//            gc.closePath();
+
         }
         else {
             if (path.size() < 2) return;
 
             gc.setStroke(currentColor);
             gc.setLineWidth(brushSize);
-//            gc.setStroke(tool == EnhancedDrawingBoard.ToolType.ERASER ? backgroundColor : currentColor);
-//            gc.setLineWidth(tool == EnhancedDrawingBoard.ToolType.ERASER ? eraserWidth : 1);
+
             gc.beginPath();
             gc.moveTo(path.get(0).getX(), path.get(0).getY());
 
@@ -144,7 +114,6 @@ public class Painter {
         }
     }
 
-    //点擦除方法
     public void eraseAtPoint(double x, double y, int size) {
         gc.setFill(backgroundColor);
         gc.fillOval(x - size/2.0, y - size/2.0, size, size);
@@ -160,14 +129,7 @@ public class Painter {
                 gc.setLineWidth(drawing.brushSize);
                 drawFreehandPath(drawing.path, drawing.type, drawing.brushSize);
             }
-//            else {
-//                gc.setLineWidth(1);
-//                switch (drawing.type) {
-//                    case LINE -> gc.strokeLine(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-//                    case RECTANGLE -> drawRectangle(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-//                    case ELLIPSE -> drawEllipse(drawing.x1, drawing.y1, drawing.x2, drawing.y2);
-//                }
-//            }
+
             else if (drawing.type == EnhancedDrawingBoard.ToolType.ERASER) {
                 gc.setFill(backgroundColor);
                 for (Point2D point : drawing.path) {
@@ -177,16 +139,7 @@ public class Painter {
                             drawing.brushSize);
                 }
             }
-//                    if (drawing.path.size() > 1) {
-//                        gc.beginPath();
-//                        gc.moveTo(drawing.path.get(0).getX(), drawing.path.get(0).getY());
-//                        for (int i = 1; i < drawing.path.size(); i++) {
-//                            gc.lineTo(drawing.path.get(i).getX(), drawing.path.get(i).getY());
-//                        }
-//                        gc.stroke();
-//                        gc.closePath();
-//                    }
-//                }
+
             else {
                 gc.setStroke(drawing.color);
                 gc.setLineWidth(drawing.brushSize);

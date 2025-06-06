@@ -60,23 +60,6 @@ public class EnhancedDrawingBoard extends Application {
             this.y2 = y2;
             this.brushSize = brushSize;
         }
-
-//        Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2) {
-//            this.type = type;
-//            this.color = color;
-//            this.x1 = x1;
-//            this.y1 = y1;
-//            this.x2 = x2;
-//            this.y2 = y2;
-//        }
-
-//        Drawing(ToolType type, Color color, List<Point2D> path) {
-//            this.type = type;
-//            this.color = color;
-//            this.path = path;
-//        }
-
-        //橡皮擦构造方法
         Drawing(ToolType type, Color color, List<Point2D> path, double brushSize) {
             this.type = type;
             this.color = color;
@@ -91,7 +74,6 @@ public class EnhancedDrawingBoard extends Application {
     private Painter painter;
     private MouseHandler mouseHandler;
 
-    // 新增成员变量：背景图像、橡皮擦相关成员变量
     private Image backgroundImage = null;
     private Slider sizeSlider;
 
@@ -115,8 +97,8 @@ public class EnhancedDrawingBoard extends Application {
 
         Button clearButton = new Button("清除");
         clearButton.setOnAction(e -> {
-            drawings.clear(); // 清空所有绘制的图形
-            painter.clearBackgroundImage(); // 移除背景并恢复白色画布
+            drawings.clear();
+            painter.clearBackgroundImage();
             if(Mainapp.ONLINE_MODE) {
                 try {
                     new PacketDrawClear(null).sendPacket(Mainapp.out);
@@ -126,7 +108,7 @@ public class EnhancedDrawingBoard extends Application {
             }
         });
 
-        // 新增保存和读取PNG按钮
+
         Button saveButton = new Button("保存背景PNG");
         Button loadButton = new Button("读取PNG背景");
         Button talkButton=new Button("聊天");
@@ -143,13 +125,13 @@ public class EnhancedDrawingBoard extends Application {
         saveButton.setOnAction(e -> saveCanvasToPNG(primaryStage));
         loadButton.setOnAction(e -> loadBackgroundFromPNG(primaryStage));
 
-        //橡皮擦模式控件
+
         VBox brushSizeControls = new VBox(5);
         brushSizeControls.setPadding(new Insets(5));
         brushSizeControls.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-radius: 5;");
 
 
-        //必刷大小滑块
+
         Label sizeLabel = new Label("粗细调节：");
         sizeSlider = new Slider(1, 50, 5);
         sizeSlider.setShowTickLabels(true);
@@ -189,8 +171,6 @@ public class EnhancedDrawingBoard extends Application {
     public int getBrushSize(){
         return (int) Math.round(sizeSlider.getValue());
     }
-
-    // 新增：保存当前画布为PNG文件（包含当前绘制内容）
     private void saveCanvasToPNG(Stage stage) {
         WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
         canvas.snapshot(null, writableImage);
@@ -234,8 +214,6 @@ public class EnhancedDrawingBoard extends Application {
         }
     }
 
-
-    // 新增：读取PNG作为背景图片，并显示在画布上
     private void loadBackgroundFromPNG(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("选择PNG背景图片");
@@ -262,7 +240,6 @@ public class EnhancedDrawingBoard extends Application {
         Platform.runLater(()->INSTANCE.loadBackgroundFromPNGOnline(PRIMARY_STAGE));
     }
     private void loadBackgroundFromPNGOnline(Stage stage) {
-        // 直接从程序目录加载固定文件名
         File file = new File(Util.FILE_NAME);
 
         if (file.exists()) {
