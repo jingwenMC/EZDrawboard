@@ -30,7 +30,7 @@ public class PacketDrawingAdd extends ServerContextualPacket implements Authenti
         super(null);
         this.path = drawing.path;
         this.tool = drawing.type;
-        this.eraserSize = drawing.eraserSize;
+        this.eraserSize = drawing.brushSize;
         this.type = drawing.type;
         this.color = drawing.color;
         this.x1 = drawing.x1;
