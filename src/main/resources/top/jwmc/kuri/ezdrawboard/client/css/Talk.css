@@ -59,7 +59,7 @@
 /* 我发送的消息 */
 .my-message {
     -fx-background-color: #9bd09a;
-    -fx-border-color: #266426;
+    -fx-border-color: white;
     -fx-alignment: center-right;
 }
 
