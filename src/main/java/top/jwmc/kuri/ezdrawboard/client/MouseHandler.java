@@ -33,7 +33,7 @@ public class MouseHandler {
 
         //橡皮擦点擦除
         if (currentTool[0] == EnhancedDrawingBoard.ToolType.ERASER) {
-            painter.eraseAtPoint(startX, startY, board.getEraserSize());
+            painter.eraseAtPoint(startX, startY, board.getBrushSize());
         }
     }
 
@@ -44,7 +44,7 @@ public class MouseHandler {
         switch (currentTool[0]) {
             case FREEHAND:
                 currentPath.add(new Point2D(endX, endY));
-                painter.drawFreehandPath(currentPath, currentTool[0], board.getEraserSize());
+                painter.drawFreehandPath(currentPath, currentTool[0], board.getBrushSize());
                 break;
             case ERASER:
 //                currentPath.add(new Point2D(endX, endY));
@@ -52,10 +52,10 @@ public class MouseHandler {
 //                painter.drawFreehandPath(currentPath, currentTool[0]);
                     // 点擦除模式
                     currentPath.add(new Point2D(endX, endY));
-                    painter.eraseAtPoint(endX, endY, board.getEraserSize());
+                    painter.eraseAtPoint(endX, endY, board.getBrushSize());
                 break;
             default:
-                painter.drawTempShape(startX, startY, endX, endY, currentTool[0],drawings);
+                painter.drawTempShape(startX, startY, endX, endY, currentTool[0],drawings, board.getBrushSize());
                 break;
         }
     }
@@ -68,7 +68,7 @@ public class MouseHandler {
                     currentTool[0],
                     painter.getCurrentColor(),
                     new ArrayList<>(currentPath),
-                    board.getEraserSize()
+                    board.getBrushSize()
             ));
         }
         else if (currentTool[0] == EnhancedDrawingBoard.ToolType.ERASER) {
@@ -77,7 +77,7 @@ public class MouseHandler {
                         currentTool[0],
                         Color.WHITE, // 橡皮擦使用白色
                         new ArrayList<>(currentPath),
-                        board.getEraserSize()
+                        board.getBrushSize()
                 ));
             // 点擦除模式不需要保存到drawings，因为效果已直接绘制
         }
@@ -86,7 +86,7 @@ public class MouseHandler {
                     currentTool[0],
                     painter.getCurrentColor(),
                     startX, startY, endX, endY,
-                    board.getEraserSize()
+                    board.getBrushSize()
             ));
         }
 
