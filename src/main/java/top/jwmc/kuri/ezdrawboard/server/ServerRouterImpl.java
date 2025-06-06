@@ -42,5 +42,7 @@ public class ServerRouterImpl extends Router {
         packets.put(packetImageRequest.getName(), packetImageRequest);
         PacketDrawClear packetDrawClear = new PacketDrawClear(agent);
         packets.put(packetDrawClear.getName(), packetDrawClear);
+        PacketDrawTempShape packetDrawTempShape = new PacketDrawTempShape(agent);
+        packets.put(packetDrawTempShape.getName(), packetDrawTempShape);
     }
 }
