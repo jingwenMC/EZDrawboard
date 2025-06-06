@@ -44,5 +44,7 @@ public class ClientRouterImpl extends Router {
         packets.put(packetDrawClear.getName(), packetDrawClear);
         PacketDrawTempShape packetDrawTempShape = new PacketDrawTempShape(null);
         packets.put(packetDrawTempShape.getName(), packetDrawTempShape);
+        PacketDrawFreehand packetDrawFreehand = new PacketDrawFreehand(null);
+        packets.put(packetDrawFreehand.getName(), packetDrawFreehand);
     }
 }

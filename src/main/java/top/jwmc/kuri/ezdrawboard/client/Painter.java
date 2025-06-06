@@ -1,9 +1,11 @@
 package top.jwmc.kuri.ezdrawboard.client;
+import com.sun.tools.javac.Main;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
+import top.jwmc.kuri.ezdrawboard.networking.board.PacketDrawFreehand;
 import top.jwmc.kuri.ezdrawboard.networking.board.PacketDrawTempShape;
 
 import java.io.IOException;
@@ -122,6 +124,15 @@ public class Painter {
 
 
     public void drawFreehandPath(boolean receive, List<Point2D> path, EnhancedDrawingBoard.ToolType tool, double brushSize) {
+        if(!receive) {
+            if(Mainapp.ONLINE_MODE) {
+                try {
+                    new PacketDrawFreehand(path,tool,brushSize).sendPacket(Mainapp.out);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         if (path.isEmpty()) return;
 
         if (tool == EnhancedDrawingBoard.ToolType.ERASER) {

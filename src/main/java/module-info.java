@@ -5,6 +5,7 @@ module top.jwmc.kuri.ezdrawboard {
     requires org.jetbrains.annotations;
     requires java.desktop;
     requires java.sql;
+    requires jdk.compiler;
     exports top.jwmc.kuri.ezdrawboard.client;
     exports top.jwmc.kuri.ezdrawboard.server;
     exports top.jwmc.kuri.ezdrawboard.networking;
