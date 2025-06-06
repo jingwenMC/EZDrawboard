@@ -58,14 +58,10 @@ public class Login extends Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            // 简单的验证逻辑
             if (isValidLogin()) {
                 showAlert(Alert.AlertType.INFORMATION, "登录成功", "欢迎 " + username + "!");
                 Mainapp.user = new User(username,username,hash,username);
-                // 启动 Choose 窗口
                 openprintWindow();
-
-                // 关闭当前登录窗口
                 primaryStage.close();
             } else {
                 showAlert(Alert.AlertType.ERROR, "登录失败", "用户名或密码错误");
@@ -92,10 +88,6 @@ public class Login extends Application {
             e.printStackTrace();
         }
     }
-
-    /**
-     * 验证登录信息
-     */
     private boolean isValidLogin() {
         while (!UPDATED) {
             Thread.onSpinWait();
@@ -113,10 +105,6 @@ public class Login extends Application {
             e.printStackTrace();
         }
     }
-
-    /**
-     * 显示提示框
-     */
     private void showAlert(Alert.AlertType type, String title, String content) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

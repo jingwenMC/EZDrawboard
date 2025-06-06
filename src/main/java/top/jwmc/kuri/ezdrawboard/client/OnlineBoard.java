@@ -138,7 +138,6 @@ public class OnlineBoard extends Application {
 
     private void openPrintWindow() {
         try {
-            // 创建新的 Stage 对象并启动 Choose 窗口
             EnhancedDrawingBoard printApp = new EnhancedDrawingBoard();
             Stage printStage = new Stage();
             printApp.start(printStage);
