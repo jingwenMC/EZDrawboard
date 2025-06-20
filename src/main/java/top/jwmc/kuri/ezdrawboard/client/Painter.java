@@ -156,7 +156,7 @@ public class Painter {
             if (drawing.type == EnhancedDrawingBoard.ToolType.FREEHAND) {
                 gc.setStroke(drawing.color);
                 gc.setLineWidth(drawing.brushSize);
-                drawFreehandPath(drawing.path, drawing.type, drawing.brushSize);
+                drawFreehandPath(true,drawing.path, drawing.type, drawing.brushSize);
             }
 
             else if (drawing.type == EnhancedDrawingBoard.ToolType.ERASER) {
