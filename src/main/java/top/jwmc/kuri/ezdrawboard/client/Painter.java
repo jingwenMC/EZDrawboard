@@ -40,8 +40,12 @@ public class Painter {
 
     public void redrawBackground() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFill(backgroundColor);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        if (backgroundImage != null) {
+            gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
+        } else {
+            gc.setFill(backgroundColor);
+            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        }
     }
 
     public void setCurrentColor(Color color) {
