@@ -44,7 +44,7 @@ public class MouseHandler {
         switch (currentTool[0]) {
             case FREEHAND:
                 currentPath.add(new Point2D(endX, endY));
-                painter.drawFreehandPath(currentPath, currentTool[0], board.getBrushSize());
+                painter.drawFreehandPath(currentPath, currentTool[0], board.getBrushSize(),Painter.INSTANCE.currentColor);
                 break;
             case ERASER:
                     currentPath.add(new Point2D(endX, endY));

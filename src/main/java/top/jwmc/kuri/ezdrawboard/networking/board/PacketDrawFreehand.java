@@ -49,12 +49,7 @@ public class PacketDrawFreehand extends ServerContextualPacket implements Authen
         color = in.readUTF();
         if(agent==null) { //Client
             if(DrawingList.INSTANCE.available) {
-                synchronized (Painter.INSTANCE) {
-                    Color tmp = Painter.INSTANCE.currentColor;
-                    Painter.INSTANCE.currentColor = Color.valueOf(color);
-                    Painter.INSTANCE.drawFreehandPath(true, path, tool, brushSize);
-                    Painter.INSTANCE.currentColor = tmp;
-                }
+                Painter.INSTANCE.drawFreehandPath(true, path, tool, brushSize,Color.valueOf(color));
             }
         } else for(AgentThread agentThread : agent.getBoard().getUsers()) { //Server
             if(agentThread!=agent) sendPacket(agentThread.getRouter().getDataOutputStream());

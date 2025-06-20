@@ -97,23 +97,25 @@ public class Painter {
         }
     }
 
-    public void drawFreehandPath(List<Point2D> path, EnhancedDrawingBoard.ToolType tool, double brushSize) {
-        drawFreehandPath(false, path, tool, brushSize);
+    public void drawFreehandPath(List<Point2D> path, EnhancedDrawingBoard.ToolType tool, double brushSize,Color color) {
+        drawFreehandPath(false, path, tool, brushSize,color);
 
     }
 
 
-    public void drawFreehandPath(boolean receive, List<Point2D> path, EnhancedDrawingBoard.ToolType tool, double brushSize) {
+    public void drawFreehandPath(boolean receive, List<Point2D> path, EnhancedDrawingBoard.ToolType tool, double brushSize,Color color) {
         if(!receive) {
             if(Mainapp.ONLINE_MODE) {
                 try {
-                    new PacketDrawFreehand(path,tool,brushSize,currentColor.toString()).sendPacket(Mainapp.out);
+                    new PacketDrawFreehand(path,tool,brushSize,color.toString()).sendPacket(Mainapp.out);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
         if (path.isEmpty()) return;
+        gc.setStroke(color);
+        gc.fillRect(0, 0, 0, 0);
 
         if (tool == EnhancedDrawingBoard.ToolType.ERASER) {
             gc.setFill(backgroundColor);
@@ -156,7 +158,7 @@ public class Painter {
             if (drawing.type == EnhancedDrawingBoard.ToolType.FREEHAND) {
                 gc.setStroke(drawing.color);
                 gc.setLineWidth(drawing.brushSize);
-                drawFreehandPath(true,drawing.path, drawing.type, drawing.brushSize);
+                drawFreehandPath(true,drawing.path, drawing.type, drawing.brushSize, drawing.color);
             }
 
             else if (drawing.type == EnhancedDrawingBoard.ToolType.ERASER) {
