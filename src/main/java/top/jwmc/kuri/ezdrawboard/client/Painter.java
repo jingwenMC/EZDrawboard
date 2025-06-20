@@ -46,6 +46,8 @@ public class Painter {
 
     public void setCurrentColor(Color color) {
         this.currentColor = color;
+        gc.setStroke(color);
+        gc.fillRect(0, 0, 0, 0);
     }
 
     public Color getCurrentColor() {
