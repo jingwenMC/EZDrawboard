@@ -1,5 +1,6 @@
 package top.jwmc.kuri.ezdrawboard.networking.board;
 
+import javafx.scene.paint.Color;
 import top.jwmc.kuri.ezdrawboard.client.DrawingList;
 import top.jwmc.kuri.ezdrawboard.client.EnhancedDrawingBoard;
 import top.jwmc.kuri.ezdrawboard.client.Painter;
@@ -13,8 +14,9 @@ import java.io.IOException;
 public class PacketDrawTempShape extends ServerContextualPacket {
     double x1,y1,x2,y2,size;
     EnhancedDrawingBoard.ToolType tool;
+    String color;
     public PacketDrawTempShape(double x1, double y1, double x2, double y2, double size,
-                               EnhancedDrawingBoard.ToolType tool) {
+                               EnhancedDrawingBoard.ToolType tool,String color) {
         super(null);
         this.x1 = x1;
         this.y1 = y1;
@@ -22,6 +24,7 @@ public class PacketDrawTempShape extends ServerContextualPacket {
         this.y2 = y2;
         this.size = size;
         this.tool = tool;
+        this.color = color;
     }
     public PacketDrawTempShape(AgentThread context) {
         super(context);
@@ -40,8 +43,14 @@ public class PacketDrawTempShape extends ServerContextualPacket {
         y2 = in.readDouble();
         size = in.readDouble();
         tool = EnhancedDrawingBoard.ToolType.values()[in.readInt()];
+        color = in.readUTF();
         if(agent==null) {
-            Painter.INSTANCE.drawTempShape(true,x1,y1,x2,y2,tool, DrawingList.INSTANCE,size);
+            synchronized (Painter.INSTANCE) {
+                Color tmp = Painter.INSTANCE.currentColor;
+                Painter.INSTANCE.currentColor = Color.valueOf(color);
+                Painter.INSTANCE.drawTempShape(true,x1,y1,x2,y2,tool, DrawingList.INSTANCE,size);
+                Painter.INSTANCE.currentColor = tmp;
+            }
         } else {
             for(AgentThread agentThread : agent.getBoard().getUsers()) //Server
                 if(agentThread!=agent) sendPacket(agentThread.getRouter().getDataOutputStream());
@@ -56,5 +65,6 @@ public class PacketDrawTempShape extends ServerContextualPacket {
         out.writeDouble(y2);
         out.writeDouble(size);
         out.writeInt(tool.ordinal());
+        out.writeUTF(color);
     }
 }

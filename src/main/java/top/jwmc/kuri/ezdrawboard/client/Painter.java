@@ -14,7 +14,7 @@ import java.util.List;
 public class Painter {
     private final GraphicsContext gc;
     private final Canvas canvas;
-    private Color currentColor = Color.BLACK;
+    public Color currentColor = Color.BLACK;
     private final Color backgroundColor = Color.WHITE;
     private final double eraserWidth = 20;
     private Image backgroundImage;
@@ -79,7 +79,7 @@ public class Painter {
     ) {
         if(!receive) {
             try {
-                if(Mainapp.ONLINE_MODE)new PacketDrawTempShape(x1,y1,x2,y2,brushSize,tool).sendPacket(Mainapp.out);
+                if(Mainapp.ONLINE_MODE)new PacketDrawTempShape(x1,y1,x2,y2,brushSize,tool,currentColor.toString()).sendPacket(Mainapp.out);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -107,7 +107,7 @@ public class Painter {
         if(!receive) {
             if(Mainapp.ONLINE_MODE) {
                 try {
-                    new PacketDrawFreehand(path,tool,brushSize).sendPacket(Mainapp.out);
+                    new PacketDrawFreehand(path,tool,brushSize,currentColor.toString()).sendPacket(Mainapp.out);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
