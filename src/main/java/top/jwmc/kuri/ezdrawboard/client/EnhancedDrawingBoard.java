@@ -39,7 +39,7 @@ public class EnhancedDrawingBoard extends Application {
         public Color color;
         public List<Point2D> path;
         public double x1, y1, x2, y2;
-        public double brushSize;     //橡皮擦大小
+        public double brushSize;
 
         Drawing(ToolType type, Color color, double x1, double y1, double x2, double y2, double brushSize) {
             this.type = type;

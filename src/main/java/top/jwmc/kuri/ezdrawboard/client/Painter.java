@@ -125,7 +125,7 @@ public class Painter {
         else {
             if (path.size() < 2) return;
 
-            gc.setStroke(currentColor);
+            //gc.setStroke(currentColor);
             gc.setLineWidth(brushSize);
 
             gc.beginPath();
